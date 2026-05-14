@@ -1,4 +1,5 @@
 import { createClient } from "@/lib/supabase/server";
+import Link from "next/link";
 import { CalendarCheck2, DollarSign, Clock, ArrowRight, Plus } from "lucide-react";
 import { BookingLinkButton } from "./booking-link-button";
 
@@ -139,13 +140,13 @@ export default async function DashboardPage() {
 
         <div className="flex items-center gap-2 flex-shrink-0">
           {venue && <BookingLinkButton venueId={venue.id} />}
-          <a
+          <Link
             href="/agendamentos/novo"
             className="flex items-center gap-1.5 rounded-xl bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-all active:scale-[0.98]"
           >
             <Plus className="h-4 w-4" />
             Novo agendamento
-          </a>
+          </Link>
         </div>
       </div>
 
@@ -172,13 +173,13 @@ export default async function DashboardPage() {
               ? "1 agendamento confirmado"
               : `${todayCount} agendamentos confirmados`}
           </p>
-          <a
+          <Link
             href="/agendamentos"
             className="inline-flex items-center gap-1 text-xs font-semibold text-brand-700 hover:underline"
           >
             Ver todos
             <ArrowRight className="h-3 w-3" />
-          </a>
+          </Link>
         </div>
 
         {/* Revenue card */}
@@ -220,9 +221,9 @@ export default async function DashboardPage() {
         <div className="rounded-2xl border border-border-subtle bg-surface-0 overflow-hidden">
           <div className="px-6 py-4 border-b border-border-subtle flex items-center justify-between">
             <h2 className="text-sm font-semibold text-text-primary">Próximos agendamentos</h2>
-            <a href="/agendamentos" className="text-xs font-medium text-brand-700 hover:underline">
+            <Link href="/agendamentos" className="text-xs font-medium text-brand-700 hover:underline">
               Ver todos
-            </a>
+            </Link>
           </div>
           <ul className="divide-y divide-border-subtle">
             {upcomingAppointments.map((apt) => {

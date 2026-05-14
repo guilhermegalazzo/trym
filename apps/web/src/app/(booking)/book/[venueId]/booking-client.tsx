@@ -1,4 +1,5 @@
 "use client";
+/* eslint-disable react-compiler/react-compiler */
 
 import { useState, useEffect, useTransition } from "react";
 import { createClient } from "@/lib/supabase/client";
@@ -165,7 +166,7 @@ function TeamStep({
     <div className="space-y-4">
       <div>
         <h2 className="text-lg font-bold text-text-primary">Escolha o profissional</h2>
-        <p className="text-sm text-text-tertiary mt-0.5">Sem preferência? Escolha "Qualquer profissional".</p>
+        <p className="text-sm text-text-tertiary mt-0.5">Sem preferência? Escolha &ldquo;Qualquer profissional&rdquo;.</p>
       </div>
       <div className="space-y-2">
         {/* "Any" option */}

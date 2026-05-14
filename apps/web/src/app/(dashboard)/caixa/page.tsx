@@ -59,7 +59,7 @@ export default async function CaixaPage() {
 
   // Today's transactions (if session open)
   let transactions: CaixaTransaction[] = [];
-  let summary: DailySummary = { cashTotal: 0, otherTotal: 0, salesCount: 0, sangria: 0, suprimento: 0 };
+  const summary: DailySummary = { cashTotal: 0, otherTotal: 0, salesCount: 0, sangria: 0, suprimento: 0 };
 
   if (activeSession) {
     const { data: txs } = await supabase

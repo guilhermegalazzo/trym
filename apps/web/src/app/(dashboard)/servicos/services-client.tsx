@@ -408,7 +408,7 @@ export function ServicosClient({
 
         {filtered.length === 0 && services.length > 0 && (
           <p className="text-sm text-neutral-500 text-center py-10">
-            Nenhum serviço encontrado para <strong>"{search}"</strong>.
+            Nenhum serviço encontrado para <strong>&ldquo;{search}&rdquo;</strong>.
           </p>
         )}
       </div>
