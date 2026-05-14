@@ -67,6 +67,7 @@ async function createAppointment(
       venue_id: payload.venueId,
       venue_customer_id: customerId,
       team_member_id: payload.teamMemberId,
+      source: "marketplace",
       scheduled_at: payload.scheduledAt,
       duration_minutes: payload.durationMinutes,
       status: "confirmed",
