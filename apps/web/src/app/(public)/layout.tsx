@@ -9,11 +9,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <header
         className="sticky top-0 z-40"
         style={{
-          background: "rgba(255,255,255,0.70)",
-          backdropFilter: "blur(24px) saturate(180%)",
-          WebkitBackdropFilter: "blur(24px) saturate(180%)",
-          borderBottom: "1px solid rgba(255,255,255,0.50)",
-          boxShadow: "0 2px 16px rgba(10,10,10,0.04)",
+          background: "#ffffff",
+          borderBottom: "1px solid #EBEBEB",
         }}
       >
         <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
@@ -47,8 +44,8 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
       <footer
         className="mt-16 py-8 text-center"
         style={{
-          borderTop: "1px solid rgba(10,10,10,0.06)",
-          background: "rgba(255,255,255,0.50)",
+          borderTop: "1px solid #EBEBEB",
+          background: "#FAFAFA",
         }}
       >
         <p className="text-xs text-text-tertiary">

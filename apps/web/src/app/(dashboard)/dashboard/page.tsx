@@ -27,12 +27,10 @@ function formatCurrency(cents: number) {
 }
 
 const glassCard = {
-  background: "rgba(255,255,255,0.65)",
-  backdropFilter: "blur(20px) saturate(160%)",
-  WebkitBackdropFilter: "blur(20px) saturate(160%)",
-  border: "1px solid rgba(255,255,255,0.65)",
-  boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
-  borderRadius: "20px",
+  background: "#ffffff",
+  border: "1px solid #EBEBEB",
+  boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
+  borderRadius: "16px",
 };
 
 export default async function DashboardPage() {
@@ -146,7 +144,7 @@ export default async function DashboardPage() {
             className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-semibold text-ink transition-all duration-200 hover:brightness-105 active:scale-[0.98]"
             style={{
               background: "var(--accent)",
-              boxShadow: "0 4px 12px rgba(127,209,193,0.35)",
+              boxShadow: "none",
             }}
           >
             <Plus className="h-4 w-4" strokeWidth={1.5} />
@@ -244,7 +242,7 @@ export default async function DashboardPage() {
         >
           <div
             className="px-6 py-4 flex items-center justify-between"
-            style={{ borderBottom: "1px solid rgba(10,10,10,0.05)" }}
+            style={{ borderBottom: "1px solid #F0F0F0" }}
           >
             <h2 className="text-sm font-semibold text-text-primary">Próximos agendamentos</h2>
             <Link href="/agendamentos" className="text-xs font-medium text-brand-600 hover:underline transition-colors">
@@ -261,7 +259,7 @@ export default async function DashboardPage() {
                 <li
                   key={apt.id}
                   className="flex items-center gap-4 px-6 py-4 hover:bg-brand-50/30 transition-colors"
-                  style={i > 0 ? { borderTop: "1px solid rgba(10,10,10,0.04)" } : undefined}
+                  style={i > 0 ? { borderTop: "1px solid #F5F5F5" } : undefined}
                 >
                   <div className="flex-shrink-0 w-12 text-center">
                     <div className="text-xs font-mono font-bold text-brand-600">{timeLabel}</div>
@@ -338,8 +336,8 @@ export default async function DashboardPage() {
               href="/configuracoes"
               className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium text-text-secondary transition-all hover:bg-brand-50/40"
               style={{
-                background: "rgba(255,255,255,0.50)",
-                border: "1px solid rgba(255,255,255,0.60)",
+                background: "#F5F5F5",
+                border: "1px solid #E8E8E8",
               }}
             >
               Configurações

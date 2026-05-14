@@ -45,11 +45,9 @@ export default function RecuperarSenhaPage() {
 
         <div className="p-8 space-y-6 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.65)",
-            backdropFilter: "blur(32px) saturate(200%)",
-            WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.70)",
-            boxShadow: "0 24px 64px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+            background: "#ffffff",
+            border: "1px solid #E8E8E8",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}>
           {sent ? (
             <div className="flex flex-col items-center text-center space-y-4">

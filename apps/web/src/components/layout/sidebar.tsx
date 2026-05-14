@@ -86,15 +86,12 @@ export function Sidebar({
     <aside
       className="w-56 flex-shrink-0 flex flex-col h-screen overflow-y-auto"
       style={{
-        background: "rgba(255,255,255,0.65)",
-        backdropFilter: "blur(24px) saturate(180%)",
-        WebkitBackdropFilter: "blur(24px) saturate(180%)",
-        borderRight: "1px solid rgba(255,255,255,0.50)",
-        boxShadow: "4px 0 24px rgba(10,10,10,0.05)",
+        background: "#ffffff",
+        borderRight: "1px solid #E8E8E8",
       }}
     >
       {/* Logo */}
-      <div className="px-4 py-4" style={{ borderBottom: "1px solid rgba(10,10,10,0.06)" }}>
+      <div className="px-4 py-4" style={{ borderBottom: "1px solid #F0F0F0" }}>
         <TrymLogo iconSize={30} />
       </div>
 
@@ -123,8 +120,7 @@ export function Sidebar({
                         : "text-text-tertiary hover:text-text-primary",
                     )}
                     style={isActive ? {
-                      background: "rgba(127,209,193,0.15)",
-                      boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+                      background: "rgba(127,209,193,0.12)",
                     } : undefined}
                   >
                     {/* Active indicator */}
@@ -161,9 +157,8 @@ export function Sidebar({
       {plan === "basic" && (
         <div className="mx-2 mb-3 rounded-2xl overflow-hidden"
           style={{
-            background: "linear-gradient(135deg, rgba(127,209,193,0.20) 0%, rgba(91,181,164,0.12) 100%)",
-            border: "1px solid rgba(127,209,193,0.30)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+            background: "rgba(127,209,193,0.08)",
+            border: "1px solid rgba(127,209,193,0.20)",
           }}>
           <div className="p-4">
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -188,7 +183,7 @@ export function Sidebar({
       )}
 
       {/* Venue info */}
-      <div className="px-3 py-3" style={{ borderTop: "1px solid rgba(10,10,10,0.06)" }}>
+      <div className="px-3 py-3" style={{ borderTop: "1px solid #F0F0F0" }}>
         <div className="flex items-center gap-2.5">
           <div
             className="h-8 w-8 rounded-xl flex-shrink-0 flex items-center justify-center text-[11px] font-bold text-ink"
@@ -206,7 +201,7 @@ export function Sidebar({
       </div>
 
       {/* User profile */}
-      <div className="px-3 py-3" style={{ borderTop: "1px solid rgba(10,10,10,0.06)" }}>
+      <div className="px-3 py-3" style={{ borderTop: "1px solid #F0F0F0" }}>
         <Link
           href="/configuracoes"
           className="flex w-full items-center gap-2.5 rounded-xl px-1.5 py-1.5 transition-all duration-200 hover:bg-brand-50/60"

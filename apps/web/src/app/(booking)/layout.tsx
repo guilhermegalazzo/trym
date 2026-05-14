@@ -7,11 +7,8 @@ export default function BookingLayout({ children }: { children: ReactNode }) {
       <header
         className="px-6 py-3"
         style={{
-          background: "rgba(255,255,255,0.70)",
-          backdropFilter: "blur(24px) saturate(180%)",
-          WebkitBackdropFilter: "blur(24px) saturate(180%)",
-          borderBottom: "1px solid rgba(255,255,255,0.50)",
-          boxShadow: "0 2px 16px rgba(10,10,10,0.04)",
+          background: "#ffffff",
+          borderBottom: "1px solid #EBEBEB",
         }}
       >
         <TrymLogo iconSize={26} />

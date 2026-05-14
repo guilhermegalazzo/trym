@@ -668,11 +668,9 @@ function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
       <div
         className="text-left w-full max-w-xs px-5 py-4 space-y-1.5 rounded-2xl"
         style={{
-          background: "rgba(255,255,255,0.65)",
-          backdropFilter: "blur(16px)",
-          WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(255,255,255,0.65)",
-          boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
+          background: "#ffffff",
+          border: "1px solid #EBEBEB",
+          boxShadow: "0 1px 3px rgba(0,0,0,0.06)",
         }}
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-tertiary mb-2">LOCAL</p>
@@ -725,7 +723,6 @@ function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
           style={{
             background: "rgba(37,211,102,0.10)",
             border: "1px solid rgba(37,211,102,0.20)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
           }}
         >
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"

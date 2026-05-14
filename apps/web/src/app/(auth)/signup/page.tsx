@@ -66,11 +66,9 @@ export default function SignupPage() {
         <div
           className="p-8 space-y-6 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.65)",
-            backdropFilter: "blur(32px) saturate(200%)",
-            WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.70)",
-            boxShadow: "0 24px 64px rgba(10,10,10,0.08), 0 8px 24px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+            background: "#ffffff",
+            border: "1px solid #E8E8E8",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}
         >
           <div>
@@ -82,7 +80,7 @@ export default function SignupPage() {
 
           {/* Role selector */}
           <div className="grid grid-cols-2 gap-2 p-1 rounded-xl"
-            style={{ background: "rgba(10,10,10,0.05)" }}>
+            style={{ background: "#F5F5F5" }}>
             {(["professional", "customer"] as const).map((r) => (
               <button
                 key={r}
@@ -90,9 +88,9 @@ export default function SignupPage() {
                 onClick={() => setRole(r)}
                 className="rounded-xl py-2 text-xs font-semibold transition-all duration-200"
                 style={role === r ? {
-                  background: "rgba(255,255,255,0.90)",
+                  background: "#ffffff",
                   color: "var(--accent-hover)",
-                  boxShadow: "0 2px 8px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
+                  boxShadow: "0 1px 4px rgba(0,0,0,0.08)",
                 } : { color: "var(--ink-muted)" }}
               >
                 {r === "professional" ? "Profissional" : "Cliente"}

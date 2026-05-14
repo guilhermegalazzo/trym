@@ -216,11 +216,9 @@ export default function OnboardingPage() {
           transition={{ duration: 0.22, ease: "easeOut" }}
           className="rounded-2xl p-8 space-y-7"
           style={{
-            background: "rgba(255,255,255,0.68)",
-            backdropFilter: "blur(32px) saturate(200%)",
-            WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.70)",
-            boxShadow: "0 24px 64px rgba(10,10,10,0.08), 0 8px 24px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+            background: "#ffffff",
+            border: "1px solid #E8E8E8",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}
         >
           {/* ── Step 0: Basics ── */}

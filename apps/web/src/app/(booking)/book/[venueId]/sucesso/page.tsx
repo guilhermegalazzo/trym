@@ -23,11 +23,9 @@ export default async function SucessoPage({
 
         <div className="p-8 space-y-4 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.65)",
-            backdropFilter: "blur(32px) saturate(200%)",
-            WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.70)",
-            boxShadow: "0 24px 64px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+            background: "#ffffff",
+            border: "1px solid #E8E8E8",
+            boxShadow: "0 4px 24px rgba(0,0,0,0.08)",
           }}>
           <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center ${isPending ? "bg-amber-50" : "bg-emerald-50"}`}>
             {isPending
