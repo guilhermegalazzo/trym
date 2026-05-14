@@ -1,5 +1,4 @@
 "use client";
-/* eslint-disable react-compiler/react-compiler */
 
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
