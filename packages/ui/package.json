@@ -1,0 +1,13 @@
+{
+  "name": "@trym/ui",
+  "version": "0.0.1",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "devDependencies": {
+    "@trym/config": "workspace:*",
+    "typescript": "^5.7.0"
+  }
+}

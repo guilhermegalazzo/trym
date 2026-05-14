@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 160" fill="none">
+  <!-- Icon -->
+  <rect width="160" height="160" rx="37" fill="#0F766E"/>
+  <rect x="30" y="37" width="100" height="27" rx="13.5" fill="white"/>
+  <rect x="66" y="37" width="27" height="83" rx="13.5" fill="white"/>
+  <circle cx="111" cy="120" r="16" fill="#EC4899"/>
+  <!-- Wordmark: T (teal) -->
+  <text x="178" y="118" font-family="'Nunito','Poppins',system-ui,sans-serif" font-weight="800" font-size="86" fill="#0F766E" letter-spacing="-2">T</text>
+  <!-- Wordmark: rym (dark navy) -->
+  <text x="232" y="118" font-family="'Nunito','Poppins',system-ui,sans-serif" font-weight="800" font-size="86" fill="#1E293B" letter-spacing="-2">rym</text>
+</svg>

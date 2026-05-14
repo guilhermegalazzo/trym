@@ -1,0 +1,23 @@
+{
+  "name": "trym",
+  "version": "0.0.1",
+  "private": true,
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "clean": "turbo run clean",
+    "db:generate": "turbo run db:generate --filter=@trym/db",
+    "db:migrate": "turbo run db:migrate --filter=@trym/db",
+    "db:seed": "turbo run db:seed --filter=@trym/db"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.4"
+  },
+  "engines": {
+    "node": ">=22.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "packageManager": "pnpm@11.1.1"
+}

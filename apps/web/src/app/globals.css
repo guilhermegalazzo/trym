@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+@theme inline {
+  /* ─── Brand (teal) — brand-600 = PRIMARY #0F766E ─── */
+  --color-brand-50:  #F0FDFA;
+  --color-brand-100: #CCFBF1;
+  --color-brand-200: #99F6E4;
+  --color-brand-300: #5EEAD4;
+  --color-brand-400: #2DD4BF;
+  --color-brand-500: #14B8A6;
+  --color-brand-600: #0F766E;
+  --color-brand-700: #115E59;
+  --color-brand-800: #134E4A;
+  --color-brand-900: #042F2E;
+  --color-brand-950: #021D1C;
+
+  /* ─── Coral (pink accent) — coral-400 = ACCENT #F472B6 ─── */
+  --color-coral-50:  #FDF2F8;
+  --color-coral-100: #FCE7F3;
+  --color-coral-200: #FBCFE8;
+  --color-coral-300: #F9A8D4;
+  --color-coral-400: #F472B6;
+  --color-coral-500: #EC4899;
+  --color-coral-600: #DB2777;
+  --color-coral-700: #BE185D;
+
+  /* ─── Accent aliases (backward compat) ─── */
+  --color-accent-50:  #FDF2F8;
+  --color-accent-100: #FCE7F3;
+  --color-accent-200: #FBCFE8;
+  --color-accent-300: #F9A8D4;
+  --color-accent-400: #F472B6;
+  --color-accent-500: #EC4899;
+  --color-accent-600: #DB2777;
+
+  /* ─── Surface ─── */
+  --color-surface-0: #FFFFFF;
+  --color-surface-1: #FAFAF9;
+  --color-surface-2: #F5F5F4;
+  --color-surface-3: #E7E5E4;
+
+  /* ─── Border (semi-transparent) ─── */
+  --color-border-subtle:  rgb(15 23 42 / 0.06);
+  --color-border-default: rgb(15 23 42 / 0.10);
+  --color-border-strong:  rgb(15 23 42 / 0.16);
+
+  /* ─── Text ─── */
+  --color-text-primary:   #0A0A0A;
+  --color-text-secondary: #525252;
+  --color-text-tertiary:  #A3A3A3;
+  --color-text-disabled:  #D4D4D4;
+
+  /* ─── Neutral ─── */
+  --color-neutral-0:   #ffffff;
+  --color-neutral-50:  #f8fafc;
+  --color-neutral-100: #f1f5f9;
+  --color-neutral-200: #e2e8f0;
+  --color-neutral-300: #cbd5e1;
+  --color-neutral-400: #94a3b8;
+  --color-neutral-500: #64748b;
+  --color-neutral-600: #475569;
+  --color-neutral-700: #334155;
+  --color-neutral-800: #1e293b;
+  --color-neutral-900: #0f172a;
+  --color-neutral-950: #020617;
+
+  /* ─── Semantic ─── */
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger:  #ef4444;
+
+  /* ─── Typography ─── */
+  --font-display: "Satoshi", sans-serif;
+  --font-body:    "Inter", sans-serif;
+  --font-sans:    var(--font-body);
+  --font-mono:    var(--font-geist-mono, "JetBrains Mono", "Fira Code", ui-monospace, monospace);
+
+  /* ─── Radius ─── */
+  --radius-sm:  8px;
+  --radius-md:  12px;
+  --radius-lg:  16px;
+  --radius-xl:  20px;
+  --radius-2xl: 24px;
+
+  /* ─── Shadows ─── */
+  --shadow-xs:         0 1px 2px 0 rgb(15 23 42 / 0.04);
+  --shadow-sm:         0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+  --shadow-md:         0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-lg:         0 10px 15px -3px rgb(15 23 42 / 0.08), 0 4px 6px -4px rgb(15 23 42 / 0.04);
+  --shadow-xl:         0 20px 25px -5px rgb(15 23 42 / 0.10), 0 8px 10px -6px rgb(15 23 42 / 0.04);
+  --shadow-brand:      0 8px 24px -8px rgb(15 118 110 / 0.30);
+  --shadow-coral:      0 8px 24px -8px rgb(244 114 182 / 0.35);
+  --shadow-card:       0 1px 3px 0 rgb(15 23 42 / 0.06), 0 1px 2px -1px rgb(15 23 42 / 0.04);
+  --shadow-card-hover: 0 4px 6px -1px rgb(15 23 42 / 0.08), 0 2px 4px -2px rgb(15 23 42 / 0.04);
+  --shadow-modal:      0 20px 60px -10px rgb(0 0 0 / 0.18);
+}
+
+:root {
+  --background: var(--color-surface-1);
+  --foreground: var(--color-text-primary);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-body);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+  font-feature-settings: "tnum";
+}
