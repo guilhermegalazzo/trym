@@ -186,6 +186,7 @@ export function ServicosClient({
   const [form, setForm] = useState<ServiceForm>(EMPTY_FORM);
   const [saving, setSaving] = useState(false);
   const [deleting, setDeleting] = useState<string | null>(null);
+  const [deleteConfirm, setDeleteConfirm] = useState<string | null>(null);
   const [search, setSearch] = useState("");
 
   function priceToCents(input: string): number {
@@ -248,8 +249,8 @@ export function ServicosClient({
   }
 
   async function handleDelete(id: string) {
-    if (!confirm("Excluir este serviço?")) return;
     setDeleting(id);
+    setDeleteConfirm(null);
     const { error } = await supabase.from("services").delete().eq("id", id);
     if (!error) setServices((prev) => prev.filter((s) => s.id !== id));
     setDeleting(null);
@@ -369,23 +370,36 @@ export function ServicosClient({
                     </span>
                   </div>
 
-                  <div className="flex gap-2 pt-1 border-t border-neutral-100">
-                    <button
-                      onClick={() => openEdit(service)}
-                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors"
-                    >
-                      <Pencil className="h-3.5 w-3.5" />
-                      Editar
-                    </button>
-                    <button
-                      onClick={() => handleDelete(service.id)}
-                      disabled={deleting === service.id}
-                      className="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-danger hover:bg-danger/10 transition-colors disabled:opacity-50"
-                    >
-                      <Trash2 className="h-3.5 w-3.5" />
-                      {deleting === service.id ? "Excluindo…" : "Excluir"}
-                    </button>
-                  </div>
+                  {deleteConfirm === service.id ? (
+                    <div className="flex items-center gap-2 pt-3 border-t border-neutral-100">
+                      <p className="flex-1 text-xs text-neutral-500">Excluir este serviço?</p>
+                      <button onClick={() => setDeleteConfirm(null)} className="text-xs text-neutral-400 hover:text-neutral-600">Cancelar</button>
+                      <button
+                        onClick={() => handleDelete(service.id)}
+                        disabled={deleting === service.id}
+                        className="rounded-lg bg-red-600 text-white text-xs font-semibold px-3 py-1.5 hover:bg-red-700 transition-all disabled:opacity-50"
+                      >
+                        {deleting === service.id ? "Excluindo…" : "Excluir"}
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="flex gap-2 pt-1 border-t border-neutral-100">
+                      <button
+                        onClick={() => openEdit(service)}
+                        className="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-neutral-600 hover:bg-neutral-100 transition-colors"
+                      >
+                        <Pencil className="h-3.5 w-3.5" />
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => setDeleteConfirm(service.id)}
+                        className="flex-1 flex items-center justify-center gap-1.5 rounded-lg py-1.5 text-xs font-medium text-danger hover:bg-danger/10 transition-colors"
+                      >
+                        <Trash2 className="h-3.5 w-3.5" />
+                        Excluir
+                      </button>
+                    </div>
+                  )}
                 </div>
               );
             })}

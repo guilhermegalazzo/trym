@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Users, Plus, Search, X, Phone, Mail, Calendar, Star, Trash2, ChevronRight, AlertCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -205,7 +205,7 @@ function CustomerDetailPanel({
     appointment_items: Array<{ description: string }>;
   }> | null>(null);
 
-  useState(() => {
+  useEffect(() => {
     supabase
       .from("appointments")
       .select("id, scheduled_at, status, total_cents, appointment_items(description)")
@@ -213,7 +213,8 @@ function CustomerDetailPanel({
       .order("scheduled_at", { ascending: false })
       .limit(20)
       .then(({ data }) => setAppointments((data ?? []) as typeof appointments));
-  });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [customer.id]);
 
   function handleDelete() {
     startDelete(async () => {
