@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import Link from "next/link";
 import {
   ArrowLeft, Calendar, Clock, User, Scissors, CreditCard,
-  Phone, CheckCircle2, Circle, Ban, UserMinus, Pencil, Trash2,
+  Phone, CheckCircle2, Circle, Ban, UserMinus, Trash2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { createClient } from "@/lib/supabase/client";
