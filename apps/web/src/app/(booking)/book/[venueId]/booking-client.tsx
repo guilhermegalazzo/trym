@@ -649,6 +649,7 @@ export function BookingClient({ venue, services, teamMembers, businessHours }: P
         venueId: venue.id,
         teamMemberId,
         scheduledAt,
+        durationMinutes: totalDuration,
         customerName: name,
         customerPhone: phone,
         customerEmail: email,

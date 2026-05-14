@@ -6,6 +6,7 @@ export type BookingPayload = {
   venueId: string;
   teamMemberId: string | null;
   scheduledAt: string;
+  durationMinutes: number;
   customerName: string;
   customerPhone: string;
   customerEmail: string;
@@ -67,6 +68,7 @@ async function createAppointment(
       venue_customer_id: customerId,
       team_member_id: payload.teamMemberId,
       scheduled_at: payload.scheduledAt,
+      duration_minutes: payload.durationMinutes,
       status: "confirmed",
       total_cents: payload.totalCents,
       payment_method: null,
