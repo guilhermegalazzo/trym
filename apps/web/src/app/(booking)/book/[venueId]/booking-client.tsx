@@ -668,11 +668,11 @@ function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
       <div
         className="text-left w-full max-w-xs px-5 py-4 space-y-1.5 rounded-2xl"
         style={{
-          background: "rgba(255,255,255,0.65)",
+          background: "rgba(255,255,255,0.06)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(255,255,255,0.65)",
-          boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
+          border: "1px solid rgba(255,255,255,0.10)",
+          boxShadow: "0 2px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
         }}
       >
         <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-tertiary mb-2">LOCAL</p>
@@ -696,16 +696,12 @@ function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
         {/* Save to calendar — primary */}
         <button
           onClick={handleSaveCalendar}
-          className="group flex w-full items-center gap-3 rounded-2xl px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
-          style={{
-            background: "var(--accent)",
-            boxShadow: "0 4px 16px rgba(127,209,193,0.40)",
-            color: "var(--ink)",
-          }}
+          className="group liquid-glass flex w-full items-center gap-3 px-5 py-4 text-left"
+          style={{ color: "rgba(255,255,255,0.95)" }}
         >
           <span
             className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
-            style={{ background: "rgba(255,255,255,0.30)" }}
+            style={{ background: "rgba(255,255,255,0.18)" }}
           >
             <CalendarPlus className="h-5 w-5" strokeWidth={1.5} />
           </span>
@@ -723,9 +719,9 @@ function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
           onClick={handleWhatsAppShare}
           className="group flex w-full items-center gap-3 rounded-2xl px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
           style={{
-            background: "rgba(37,211,102,0.10)",
+            background: "rgba(37,211,102,0.08)",
             border: "1px solid rgba(37,211,102,0.20)",
-            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.10)",
           }}
         >
           <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"

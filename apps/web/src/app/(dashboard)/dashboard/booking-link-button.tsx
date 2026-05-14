@@ -41,11 +41,11 @@ export function BookingLinkButton({ venueId }: { venueId: string }) {
         onClick={() => setOpen(v => !v)}
         className="flex items-center gap-1.5 rounded-xl px-3.5 py-2 text-sm font-medium text-text-secondary transition-all duration-200 hover:text-text-primary active:scale-[0.98]"
         style={{
-          background: "rgba(255,255,255,0.65)",
+          background: "rgba(255,255,255,0.08)",
           backdropFilter: "blur(16px)",
           WebkitBackdropFilter: "blur(16px)",
-          border: "1px solid rgba(255,255,255,0.60)",
-          boxShadow: "0 2px 8px rgba(10,10,10,0.04)",
+          border: "1px solid rgba(255,255,255,0.10)",
+          boxShadow: "0 2px 8px rgba(0,0,0,0.35)",
         }}
       >
         {copied ? (
@@ -59,11 +59,11 @@ export function BookingLinkButton({ venueId }: { venueId: string }) {
         <div
           className="absolute right-0 top-full mt-2 z-50 w-60 rounded-2xl overflow-hidden"
           style={{
-            background: "rgba(255,255,255,0.85)",
+            background: "rgba(18,18,18,0.92)",
             backdropFilter: "blur(32px) saturate(200%)",
             WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.70)",
-            boxShadow: "0 24px 64px rgba(10,10,10,0.12), 0 8px 24px rgba(10,10,10,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
+            border: "1px solid rgba(255,255,255,0.10)",
+            boxShadow: "0 24px 64px rgba(0,0,0,0.60), 0 8px 24px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
           }}
         >
           <div className="px-4 pt-3 pb-2">
@@ -91,10 +91,10 @@ export function BookingLinkButton({ venueId }: { venueId: string }) {
           <button
             onClick={handleCopy}
             className="flex w-full items-center gap-3 px-4 py-3 text-sm hover:bg-brand-50/40 transition-all duration-150"
-            style={{ borderTop: "1px solid rgba(10,10,10,0.05)" }}
+            style={{ borderTop: "1px solid rgba(255,255,255,0.07)" }}
           >
             <span className="flex h-8 w-8 items-center justify-center rounded-xl"
-              style={{ background: "rgba(10,10,10,0.06)" }}>
+              style={{ background: "rgba(255,255,255,0.08)" }}>
               <Copy className="h-4 w-4 text-text-secondary" strokeWidth={1.5} />
             </span>
             <div className="text-left">
@@ -105,7 +105,7 @@ export function BookingLinkButton({ venueId }: { venueId: string }) {
 
           <div
             className="px-4 py-2.5"
-            style={{ background: "rgba(127,209,193,0.06)", borderTop: "1px solid rgba(10,10,10,0.05)" }}
+            style={{ background: "rgba(127,209,193,0.06)", borderTop: "1px solid rgba(255,255,255,0.07)" }}
           >
             <p className="text-[10px] text-text-tertiary truncate font-mono">
               {typeof window !== "undefined" ? getUrl() : ""}
