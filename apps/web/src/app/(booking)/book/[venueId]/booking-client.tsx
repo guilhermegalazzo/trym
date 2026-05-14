@@ -6,7 +6,7 @@ import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
 import {
   MapPin, Clock, ChevronRight, ChevronLeft, Check,
-  User, Calendar, Scissors, CheckCircle2, Loader2,
+  User, Calendar, Scissors, CheckCircle2, Loader2, CalendarPlus,
 } from "lucide-react";
 import { submitBooking } from "./actions";
 import type { BookingVenue, BookingService, BookingTeamMember, BookingHours } from "./page";
@@ -542,40 +542,210 @@ function ConfirmStep({
   );
 }
 
+// ─── ICS generator ────────────────────────────────────────────────────────────
+
+function generateICS(params: {
+  venueName: string;
+  addressLine: string | null;
+  city: string | null;
+  phone: string | null;
+  dateStr: string;   // YYYY-MM-DD
+  timeStr: string;   // HH:MM
+  durationMinutes: number;
+}): string {
+  const { venueName, addressLine, city, phone, dateStr, timeStr, durationMinutes } = params;
+  const [h, m] = timeStr.split(":").map(Number);
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+  const fmtDt = (date: string, hour: number, min: number) =>
+    `${date.replace(/-/g, "")}T${pad(hour)}${pad(min)}00`;
+
+  const startDt  = fmtDt(dateStr, h, m);
+  const endH     = Math.floor((h * 60 + m + durationMinutes) / 60);
+  const endM     = (h * 60 + m + durationMinutes) % 60;
+  const endDt    = fmtDt(dateStr, endH, endM);
+  const uid      = `${dateStr}-${timeStr.replace(":", "")}-${Date.now()}@trym.app`;
+  const location = [addressLine, city].filter(Boolean).join(", ");
+  const desc     = phone ? `Dúvidas? Entre em contato: ${phone}` : "Agendamento via Trym";
+
+  return [
+    "BEGIN:VCALENDAR",
+    "VERSION:2.0",
+    "PRODID:-//Trym//Trym Agendamentos//PT",
+    "CALSCALE:GREGORIAN",
+    "METHOD:PUBLISH",
+    "BEGIN:VEVENT",
+    `UID:${uid}`,
+    `DTSTART:${startDt}`,
+    `DTEND:${endDt}`,
+    `SUMMARY:Agendamento – ${venueName}`,
+    location ? `LOCATION:${location}` : "",
+    `DESCRIPTION:${desc}`,
+    "STATUS:CONFIRMED",
+    "BEGIN:VALARM",
+    "TRIGGER:-P1D",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Lembrete: você tem um agendamento amanhã!",
+    "END:VALARM",
+    "BEGIN:VALARM",
+    "TRIGGER:-PT1H",
+    "ACTION:DISPLAY",
+    "DESCRIPTION:Seu agendamento começa em 1 hora!",
+    "END:VALARM",
+    "END:VEVENT",
+    "END:VCALENDAR",
+  ].filter(Boolean).join("\r\n");
+}
+
+function downloadICS(ics: string, filename: string) {
+  const blob = new Blob([ics], { type: "text/calendar;charset=utf-8" });
+  const url  = URL.createObjectURL(blob);
+  const a    = document.createElement("a");
+  a.href     = url;
+  a.download = filename;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
 // ─── Success screen ───────────────────────────────────────────────────────────
 
-function SuccessScreen({ venue, selectedDate, selectedSlot }: {
+function SuccessScreen({ venue, selectedDate, selectedSlot, totalDuration }: {
   venue: BookingVenue;
   selectedDate: string;
   selectedSlot: string;
+  totalDuration: number;
 }) {
+  function handleSaveCalendar() {
+    const ics = generateICS({
+      venueName:    venue.name,
+      addressLine:  venue.address_line ?? null,
+      city:         venue.city ?? null,
+      phone:        venue.phone ?? null,
+      dateStr:      selectedDate,
+      timeStr:      selectedSlot,
+      durationMinutes: totalDuration,
+    });
+    downloadICS(ics, `agendamento-${venue.name.toLowerCase().replace(/\s+/g, "-")}.ics`);
+  }
+
+  function handleWhatsAppShare() {
+    const dateLabel = new Date(selectedDate + "T00:00:00").toLocaleDateString("pt-BR", {
+      weekday: "long", day: "numeric", month: "long",
+    });
+    const loc = [venue.address_line, venue.city].filter(Boolean).join(", ");
+    const text = encodeURIComponent(
+      `📅 Meu agendamento está confirmado!\n\n` +
+      `🏢 ${venue.name}\n` +
+      `📆 ${dateLabel} às ${selectedSlot}\n` +
+      (loc ? `📍 ${loc}\n` : "") +
+      (venue.phone ? `📞 ${venue.phone}\n` : "") +
+      `\nAgendado pelo Trym ✅`
+    );
+    window.open(`https://wa.me/?text=${text}`, "_blank");
+  }
+
   return (
-    <div className="flex flex-col items-center text-center py-8 space-y-4">
-      <div className="flex h-20 w-20 items-center justify-center rounded-full bg-emerald-100">
-        <CheckCircle2 className="h-10 w-10 text-emerald-500" />
+    <div className="flex flex-col items-center text-center py-6 space-y-5 animate-fade-up">
+      {/* Check icon */}
+      <div
+        className="flex h-20 w-20 items-center justify-center rounded-full"
+        style={{ background: "rgba(127,209,193,0.15)", boxShadow: "0 0 0 8px rgba(127,209,193,0.08)" }}
+      >
+        <CheckCircle2 className="h-10 w-10 text-brand-500" strokeWidth={1.5} />
       </div>
+
       <div>
-        <h2 className="text-xl font-bold text-text-primary">Agendamento confirmado!</h2>
-        <p className="text-sm text-text-secondary mt-1 max-w-xs">
-          Você tem um horário em <strong>{venue.name}</strong> para{" "}
+        <h2 className="text-xl font-bold text-text-primary" style={{ letterSpacing: "-0.02em" }}>
+          Agendamento confirmado!
+        </h2>
+        <p className="text-sm text-text-tertiary mt-1 max-w-xs">
+          Você tem um horário em <strong className="text-text-primary">{venue.name}</strong> para{" "}
           {fmtDateDisplay(selectedDate)} às {selectedSlot}.
         </p>
       </div>
-      <div className="rounded-xl border border-border-subtle bg-surface-1 px-6 py-4 text-left w-full max-w-xs space-y-1">
-        <p className="text-xs font-semibold text-text-tertiary uppercase tracking-wide mb-2">Local</p>
+
+      {/* Venue info card */}
+      <div
+        className="text-left w-full max-w-xs px-5 py-4 space-y-1.5 rounded-2xl"
+        style={{
+          background: "rgba(255,255,255,0.65)",
+          backdropFilter: "blur(16px)",
+          WebkitBackdropFilter: "blur(16px)",
+          border: "1px solid rgba(255,255,255,0.65)",
+          boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
+        }}
+      >
+        <p className="text-[10px] font-bold uppercase tracking-[0.12em] text-text-tertiary mb-2">LOCAL</p>
         <p className="text-sm font-semibold text-text-primary">{venue.name}</p>
         {venue.address_line && (
-          <p className="text-xs text-text-secondary flex items-center gap-1">
-            <MapPin className="h-3 w-3" /> {venue.address_line}
-            {venue.city && `, ${venue.city}`}
+          <p className="text-xs text-text-secondary flex items-center gap-1.5">
+            <MapPin className="h-3 w-3 flex-shrink-0 text-brand-500" strokeWidth={1.5} />
+            {venue.address_line}{venue.city && `, ${venue.city}`}
           </p>
         )}
         {venue.phone && (
-          <p className="text-xs text-text-secondary">{venue.phone}</p>
+          <p className="text-xs text-text-secondary flex items-center gap-1.5">
+            <span className="h-3 w-3 flex-shrink-0 text-brand-500 text-center leading-none">☎</span>
+            {venue.phone}
+          </p>
         )}
       </div>
-      <p className="text-xs text-text-tertiary">
-        Você receberá uma confirmação em breve. Em caso de dúvidas, entre em contato direto com o estabelecimento.
+
+      {/* ── Action buttons ── */}
+      <div className="w-full max-w-xs space-y-2.5">
+        {/* Save to calendar — primary */}
+        <button
+          onClick={handleSaveCalendar}
+          className="group flex w-full items-center gap-3 rounded-2xl px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
+          style={{
+            background: "var(--accent)",
+            boxShadow: "0 4px 16px rgba(127,209,193,0.40)",
+            color: "var(--ink)",
+          }}
+        >
+          <span
+            className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+            style={{ background: "rgba(255,255,255,0.30)" }}
+          >
+            <CalendarPlus className="h-5 w-5" strokeWidth={1.5} />
+          </span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold leading-tight">Salvar no Calendário</p>
+            <p className="text-xs opacity-75 mt-0.5 leading-tight">
+              Receba lembretes no iPhone e Android
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 opacity-60 group-hover:opacity-100 transition-opacity" strokeWidth={1.5} />
+        </button>
+
+        {/* Share via WhatsApp — secondary */}
+        <button
+          onClick={handleWhatsAppShare}
+          className="group flex w-full items-center gap-3 rounded-2xl px-5 py-4 text-left transition-all duration-200 active:scale-[0.98]"
+          style={{
+            background: "rgba(37,211,102,0.10)",
+            border: "1px solid rgba(37,211,102,0.20)",
+            boxShadow: "inset 0 1px 0 rgba(255,255,255,0.6)",
+          }}
+        >
+          <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-xl"
+            style={{ background: "rgba(37,211,102,0.15)" }}>
+            <svg className="h-5 w-5 text-[#25D366]" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+            </svg>
+          </span>
+          <div className="flex-1 min-w-0">
+            <p className="text-sm font-semibold text-text-primary leading-tight">Compartilhar via WhatsApp</p>
+            <p className="text-xs text-text-tertiary mt-0.5 leading-tight">
+              Envie o resumo do agendamento
+            </p>
+          </div>
+          <ChevronRight className="h-4 w-4 text-text-tertiary group-hover:text-text-secondary transition-colors" strokeWidth={1.5} />
+        </button>
+      </div>
+
+      <p className="text-xs text-text-tertiary max-w-xs">
+        Em caso de dúvidas, entre em contato direto com o estabelecimento.
       </p>
     </div>
   );
@@ -697,7 +867,14 @@ export function BookingClient({ venue, services, teamMembers, businessHours }: P
   }
 
   if (done) {
-    return <SuccessScreen venue={venue} selectedDate={selectedDate} selectedSlot={selectedSlot} />;
+    return (
+      <SuccessScreen
+        venue={venue}
+        selectedDate={selectedDate}
+        selectedSlot={selectedSlot}
+        totalDuration={totalDuration}
+      />
+    );
   }
 
   return (
