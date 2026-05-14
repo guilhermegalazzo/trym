@@ -216,8 +216,8 @@ export default async function DashboardPage() {
 
       </div>
 
-      {/* Upcoming appointments or empty state */}
-      {hasData && upcomingAppointments.length > 0 ? (
+      {/* Upcoming appointments */}
+      {upcomingAppointments.length > 0 ? (
         <div className="rounded-2xl border border-border-subtle bg-surface-0 overflow-hidden">
           <div className="px-6 py-4 border-b border-border-subtle flex items-center justify-between">
             <h2 className="text-sm font-semibold text-text-primary">Próximos agendamentos</h2>
@@ -228,17 +228,9 @@ export default async function DashboardPage() {
           <ul className="divide-y divide-border-subtle">
             {upcomingAppointments.map((apt) => {
               const scheduledAt = new Date(apt.scheduled_at);
-              const timeLabel = scheduledAt.toLocaleTimeString("pt-BR", {
-                hour: "2-digit",
-                minute: "2-digit",
-              });
-              const dateLabel2 = scheduledAt.toLocaleDateString("pt-BR", {
-                weekday: "short",
-                day: "numeric",
-                month: "short",
-              });
+              const timeLabel = scheduledAt.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+              const dateLabel2 = scheduledAt.toLocaleDateString("pt-BR", { weekday: "short", day: "numeric", month: "short" });
               const serviceName = apt.appointment_items[0]?.description ?? "Serviço";
-
               return (
                 <li key={apt.id} className="flex items-center gap-4 px-6 py-4 hover:bg-surface-1 transition-colors">
                   <div className="flex-shrink-0 w-12 text-center">
@@ -250,8 +242,7 @@ export default async function DashboardPage() {
                       {apt.venue_customers?.full_name ?? "Cliente"}
                     </div>
                     <div className="text-xs text-text-tertiary truncate">
-                      {serviceName}
-                      {apt.team_members && ` · ${apt.team_members.display_name}`}
+                      {serviceName}{apt.team_members && ` · ${apt.team_members.display_name}`}
                     </div>
                   </div>
                   <div className="text-sm font-mono font-medium text-text-secondary tabular-nums">
@@ -262,31 +253,49 @@ export default async function DashboardPage() {
             })}
           </ul>
         </div>
+      ) : hasData ? (
+        /* Has past data but no upcoming — show compact prompt */
+        <div className="rounded-2xl border border-border-subtle bg-surface-0 px-6 py-5 flex items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <div className="h-9 w-9 rounded-xl bg-brand-50 flex items-center justify-center flex-shrink-0">
+              <CalendarCheck2 className="h-4 w-4 text-brand-600" strokeWidth={1.5} />
+            </div>
+            <div>
+              <p className="text-sm font-semibold text-text-primary">Nenhum agendamento futuro</p>
+              <p className="text-xs text-text-tertiary mt-0.5">Compartilhe seu link para receber novos agendamentos.</p>
+            </div>
+          </div>
+          <Link
+            href="/agendamentos"
+            className="flex-shrink-0 text-xs font-semibold text-brand-700 hover:underline"
+          >
+            Ver histórico →
+          </Link>
+        </div>
       ) : (
+        /* Truly empty — no data at all */
         <div className="rounded-2xl border border-dashed border-border-default bg-surface-0 p-8 flex flex-col items-center text-center">
           <div className="h-12 w-12 rounded-2xl bg-brand-50 flex items-center justify-center mb-4">
             <CalendarCheck2 className="h-6 w-6 text-brand-600" strokeWidth={1.5} />
           </div>
-          <h3 className="text-sm font-semibold text-text-primary mb-1">
-            Seu painel está pronto
-          </h3>
+          <h3 className="text-sm font-semibold text-text-primary mb-1">Seu painel está pronto</h3>
           <p className="text-sm text-text-tertiary max-w-xs mb-5">
-            Adicione serviços e aguarde os primeiros agendamentos — tudo aparece aqui em tempo real.
+            Adicione serviços e compartilhe seu link — os agendamentos aparecem aqui em tempo real.
           </p>
           <div className="flex items-center gap-3">
-            <a
+            <Link
               href="/servicos"
               className="flex items-center gap-1.5 rounded-xl bg-brand-600 px-4 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-all"
             >
               <Plus className="h-3.5 w-3.5" />
               Adicionar serviços
-            </a>
-            <a
+            </Link>
+            <Link
               href="/configuracoes"
               className="flex items-center gap-1.5 rounded-xl border border-border-default px-4 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 transition-all"
             >
               Configurações
-            </a>
+            </Link>
           </div>
         </div>
       )}
