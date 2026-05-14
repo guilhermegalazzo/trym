@@ -20,7 +20,7 @@ const WEEKDAYS_SHORT = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const WEEKDAYS_LONG  = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
 const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  confirmed:   { bg: "bg-brand-50",   border: "border-brand-400",   text: "text-brand-800"   },
+  confirmed:   { bg: "bg-coral-50",   border: "border-coral-400",   text: "text-coral-800"   },
   in_progress: { bg: "bg-amber-50",   border: "border-amber-400",   text: "text-amber-800"   },
   completed:   { bg: "bg-emerald-50", border: "border-emerald-400", text: "text-emerald-800" },
   no_show:     { bg: "bg-neutral-100",border: "border-neutral-300", text: "text-neutral-500" },
@@ -376,7 +376,7 @@ export function CalendarioClient({
                     {day.getDate()}
                   </span>
                   {dayApts.length > 0 && (
-                    <span className="mt-0.5 text-[9px] font-semibold text-brand-600 tabular-nums">
+                    <span className="mt-0.5 text-[9px] font-semibold text-coral-500 tabular-nums">
                       {dayApts.length}
                     </span>
                   )}
