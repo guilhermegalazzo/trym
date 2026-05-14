@@ -1,5 +1,6 @@
 import { createClient } from "@/lib/supabase/server";
 import { CalendarCheck2, DollarSign, Clock, ArrowRight, Plus } from "lucide-react";
+import { BookingLinkButton } from "./booking-link-button";
 
 function getGreeting(hour: number) {
   if (hour < 12) return "Bom dia";
@@ -36,7 +37,7 @@ export default async function DashboardPage() {
 
   // Fetch venue
   const { data: venue } = user
-    ? await supabase.from("venues").select("id").eq("owner_id", user.id).maybeSingle()
+    ? await supabase.from("venues").select("id, name").eq("owner_id", user.id).maybeSingle()
     : { data: null };
 
   let todayCount = 0;
@@ -137,8 +138,9 @@ export default async function DashboardPage() {
         </div>
 
         <div className="flex items-center gap-2 flex-shrink-0">
+          {venue && <BookingLinkButton venueId={venue.id} />}
           <a
-            href="/agendamentos"
+            href="/agendamentos/novo"
             className="flex items-center gap-1.5 rounded-xl bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-all active:scale-[0.98]"
           >
             <Plus className="h-4 w-4" />

@@ -37,5 +37,6 @@ export default async function AgendamentoDetalhePage({
 
   if (!apt) notFound();
 
-  return <AgendamentoDetalheClient apt={apt as Parameters<typeof AgendamentoDetalheClient>[0]["apt"]} />;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  return <AgendamentoDetalheClient apt={apt as any} />;
 }
