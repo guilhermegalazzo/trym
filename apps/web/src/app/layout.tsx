@@ -35,7 +35,15 @@ export default function RootLayout({
   return (
     <html lang="pt-BR" className={`h-full ${jetbrainsMono.variable}`}>
       <body className="min-h-full bg-surface-1 text-text-primary antialiased">
-        <Providers>{children}</Providers>
+        {/* Ambient orb system — always behind everything */}
+        <div className="orb orb-1" aria-hidden="true" />
+        <div className="orb orb-2" aria-hidden="true" />
+        <div className="orb orb-3" aria-hidden="true" />
+        <div className="noise-overlay" aria-hidden="true" />
+
+        <div className="relative z-10">
+          <Providers>{children}</Providers>
+        </div>
       </body>
     </html>
   );

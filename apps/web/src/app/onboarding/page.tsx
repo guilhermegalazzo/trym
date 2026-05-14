@@ -214,8 +214,14 @@ export default function OnboardingPage() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -8 }}
           transition={{ duration: 0.22, ease: "easeOut" }}
-          className="bg-surface-0 rounded-2xl border border-border-subtle shadow-xl p-8 space-y-7"
-          style={{ boxShadow: "0 20px 40px -12px rgb(15 23 42 / 0.10)" }}
+          className="rounded-2xl p-8 space-y-7"
+          style={{
+            background: "rgba(255,255,255,0.68)",
+            backdropFilter: "blur(32px) saturate(200%)",
+            WebkitBackdropFilter: "blur(32px) saturate(200%)",
+            border: "1px solid rgba(255,255,255,0.70)",
+            boxShadow: "0 24px 64px rgba(10,10,10,0.08), 0 8px 24px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+          }}
         >
           {/* ── Step 0: Basics ── */}
           {step === 0 && (
@@ -243,7 +249,7 @@ export default function OnboardingPage() {
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Ex: Salão da Ana, Studio Pet SP"
-                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
+                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
                   />
                 </div>
 
@@ -322,7 +328,7 @@ export default function OnboardingPage() {
                     value={phone}
                     onChange={(e) => setPhone(e.target.value)}
                     placeholder="+55 11 99999-9999"
-                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
+                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
                   />
                 </div>
                 <div className="space-y-1.5">
@@ -332,7 +338,7 @@ export default function OnboardingPage() {
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Rua, número, bairro"
-                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
+                    className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
                   />
                 </div>
                 <div className="grid grid-cols-2 gap-3">
@@ -345,7 +351,7 @@ export default function OnboardingPage() {
                       value={city}
                       onChange={(e) => setCity(e.target.value)}
                       placeholder="São Paulo"
-                      className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-600 focus:ring-2 focus:ring-brand-600/15 transition-all"
+                      className="w-full rounded-xl border border-border-default bg-surface-0 px-4 py-3 text-sm text-text-primary placeholder-text-tertiary outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all"
                     />
                   </div>
                   <div className="space-y-1.5">
@@ -457,12 +463,16 @@ export default function OnboardingPage() {
               whileHover={canNext && !saving ? { scale: 1.01 } : {}}
               whileTap={canNext && !saving ? { scale: 0.98 } : {}}
               transition={{ type: "spring", stiffness: 400, damping: 25 }}
-              className={cn(
-                "flex-1 flex items-center justify-center gap-2 rounded-xl h-12 text-sm font-semibold transition-all duration-200",
-                canNext && !saving
-                  ? "bg-brand-600 text-white hover:bg-brand-700 shadow-brand"
-                  : "bg-surface-3 text-text-disabled cursor-not-allowed"
-              )}
+              className="flex-1 flex items-center justify-center gap-2 rounded-xl h-12 text-sm font-semibold transition-all duration-200"
+              style={canNext && !saving ? {
+                background: "var(--accent)",
+                color: "var(--ink)",
+                boxShadow: "0 4px 16px rgba(127,209,193,0.40)",
+              } : {
+                background: "rgba(10,10,10,0.06)",
+                color: "var(--ink-subtle)",
+                cursor: "not-allowed",
+              }}
             >
               {saving ? (
                 "Criando…"

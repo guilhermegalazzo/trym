@@ -8,6 +8,14 @@ import { useRouter } from "next/navigation";
 import { signUpSchema, type SignUpInput } from "@trym/api/schemas";
 import { TrymLogo } from "@/components/brand/logo";
 
+const inputCls = [
+  "w-full rounded-xl border px-4 py-3 text-sm text-text-primary placeholder-text-tertiary",
+  "outline-none transition-all duration-200",
+  "bg-white/60 backdrop-blur-sm",
+  "border-white/60 focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20",
+  "shadow-sm",
+].join(" ");
+
 export default function SignupPage() {
   const router = useRouter();
   const supabase = createClient();
@@ -46,31 +54,46 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-12">
-      <div className="w-full max-w-sm">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12"
+      style={{ background: "var(--color-surface-1)" }}>
+      <div className="w-full max-w-sm animate-fade-up">
         <div className="flex flex-col items-center mb-10">
           <TrymLogo iconSize={48} />
-          <p className="mt-3 text-sm text-neutral-500">Crie sua conta gratuitamente</p>
+          <p className="mt-3 text-sm text-text-tertiary">Crie sua conta gratuitamente</p>
         </div>
 
-        <div className="bg-white rounded-2xl shadow-card p-8 space-y-6">
+        {/* Glass card */}
+        <div
+          className="p-8 space-y-6 rounded-2xl"
+          style={{
+            background: "rgba(255,255,255,0.65)",
+            backdropFilter: "blur(32px) saturate(200%)",
+            WebkitBackdropFilter: "blur(32px) saturate(200%)",
+            border: "1px solid rgba(255,255,255,0.70)",
+            boxShadow: "0 24px 64px rgba(10,10,10,0.08), 0 8px 24px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
+          }}
+        >
           <div>
-            <h2 className="text-xl font-semibold text-neutral-900">Criar conta</h2>
-            <p className="mt-1 text-sm text-neutral-500">Comece seu período de 14 dias grátis.</p>
+            <h2 className="text-2xl font-bold tracking-tight text-text-primary" style={{ letterSpacing: "-0.03em" }}>
+              Criar conta
+            </h2>
+            <p className="mt-1 text-sm text-text-tertiary">Comece seu período de 14 dias grátis.</p>
           </div>
 
           {/* Role selector */}
-          <div className="grid grid-cols-2 gap-2 p-1 bg-neutral-100 rounded-xl">
+          <div className="grid grid-cols-2 gap-2 p-1 rounded-xl"
+            style={{ background: "rgba(10,10,10,0.05)" }}>
             {(["professional", "customer"] as const).map((r) => (
               <button
                 key={r}
                 type="button"
                 onClick={() => setRole(r)}
-                className={`rounded-lg py-2 text-xs font-semibold transition-all ${
-                  role === r
-                    ? "bg-white text-brand-600 shadow-card"
-                    : "text-neutral-500 hover:text-neutral-700"
-                }`}
+                className="rounded-xl py-2 text-xs font-semibold transition-all duration-200"
+                style={role === r ? {
+                  background: "rgba(255,255,255,0.90)",
+                  color: "var(--accent-hover)",
+                  boxShadow: "0 2px 8px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.8)",
+                } : { color: "var(--ink-muted)" }}
               >
                 {r === "professional" ? "Profissional" : "Cliente"}
               </button>
@@ -80,8 +103,8 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit((d) => onSubmit({ ...d, role }))} className="space-y-4">
             <input type="hidden" value={role} {...register("role")} />
 
-            <div className="space-y-1">
-              <label htmlFor="fullName" className="block text-sm font-medium text-neutral-700">
+            <div className="space-y-1.5">
+              <label htmlFor="fullName" className="block text-xs font-semibold text-text-secondary uppercase tracking-wide">
                 Nome completo
               </label>
               <input
@@ -89,7 +112,7 @@ export default function SignupPage() {
                 type="text"
                 autoComplete="name"
                 {...register("fullName")}
-                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                className={inputCls}
                 placeholder="Seu nome"
               />
               {errors.fullName && (
@@ -97,8 +120,8 @@ export default function SignupPage() {
               )}
             </div>
 
-            <div className="space-y-1">
-              <label htmlFor="email" className="block text-sm font-medium text-neutral-700">
+            <div className="space-y-1.5">
+              <label htmlFor="email" className="block text-xs font-semibold text-text-secondary uppercase tracking-wide">
                 E-mail
               </label>
               <input
@@ -106,7 +129,7 @@ export default function SignupPage() {
                 type="email"
                 autoComplete="email"
                 {...register("email")}
-                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                className={inputCls}
                 placeholder="voce@exemplo.com"
               />
               {errors.email && (
@@ -114,8 +137,8 @@ export default function SignupPage() {
               )}
             </div>
 
-            <div className="space-y-1">
-              <label htmlFor="password" className="block text-sm font-medium text-neutral-700">
+            <div className="space-y-1.5">
+              <label htmlFor="password" className="block text-xs font-semibold text-text-secondary uppercase tracking-wide">
                 Senha
               </label>
               <input
@@ -123,7 +146,7 @@ export default function SignupPage() {
                 type="password"
                 autoComplete="new-password"
                 {...register("password")}
-                className="w-full rounded-md border border-neutral-200 bg-white px-3 py-2.5 text-sm text-neutral-900 placeholder-neutral-400 outline-none transition focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20"
+                className={inputCls}
                 placeholder="Mínimo 8 caracteres"
               />
               {errors.password && (
@@ -132,7 +155,7 @@ export default function SignupPage() {
             </div>
 
             {errors.root && (
-              <p className="rounded-md bg-danger/10 px-3 py-2 text-xs text-danger">
+              <p className="rounded-xl bg-danger/8 border border-danger/20 px-4 py-2.5 text-xs text-danger">
                 {errors.root.message}
               </p>
             )}
@@ -140,25 +163,32 @@ export default function SignupPage() {
             <button
               type="submit"
               disabled={isSubmitting}
-              className="w-full rounded-md bg-brand-500 px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-brand-600 focus:outline-none focus:ring-2 focus:ring-brand-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="w-full rounded-xl px-4 py-3 text-sm font-semibold transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              style={{
+                background: "var(--accent)",
+                color: "var(--ink)",
+                boxShadow: "0 4px 16px rgba(127,209,193,0.40)",
+              }}
             >
               {isSubmitting ? "Criando conta…" : "Criar conta grátis"}
             </button>
           </form>
 
-          <p className="text-center text-xs text-neutral-500">
+          <div className="divider-gradient" />
+
+          <p className="text-center text-xs text-text-tertiary">
             Já tem conta?{" "}
-            <a href="/login" className="font-medium text-brand-500 hover:underline">
+            <a href="/login" className="font-semibold text-brand-600 hover:text-brand-500 hover:underline transition-colors">
               Entrar
             </a>
           </p>
         </div>
 
-        <p className="mt-6 text-center text-[11px] text-neutral-400">
+        <p className="mt-6 text-center text-[11px] text-text-tertiary">
           Ao criar uma conta você aceita os{" "}
-          <a href="/termos" target="_blank" className="underline hover:text-neutral-600">Termos de Uso</a>
+          <a href="/termos" target="_blank" className="underline hover:text-text-secondary transition-colors">Termos de Uso</a>
           {" "}e a{" "}
-          <a href="/privacidade" target="_blank" className="underline hover:text-neutral-600">Política de Privacidade</a>.
+          <a href="/privacidade" target="_blank" className="underline hover:text-text-secondary transition-colors">Política de Privacidade</a>.
         </p>
       </div>
     </div>

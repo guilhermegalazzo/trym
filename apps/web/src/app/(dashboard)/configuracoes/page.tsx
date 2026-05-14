@@ -98,7 +98,8 @@ function PerfilTab() {
       {success && <p className="rounded-md bg-success/10 px-3 py-2 text-xs text-success font-medium">Perfil atualizado!</p>}
       <div className="flex justify-end">
         <button type="submit" disabled={saving}
-          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors disabled:opacity-50">
+          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}>
           {saving ? "Salvando…" : "Salvar alterações"}
         </button>
       </div>
@@ -192,7 +193,8 @@ function NegocioTab() {
       {success && <p className="rounded-md bg-success/10 px-3 py-2 text-xs text-success font-medium">Negócio atualizado!</p>}
       <div className="flex justify-end">
         <button type="submit" disabled={saving}
-          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors disabled:opacity-50">
+          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}>
           {saving ? "Salvando…" : "Salvar alterações"}
         </button>
       </div>
@@ -278,7 +280,8 @@ function HorariosTab() {
       {success && <p className="rounded-md bg-success/10 px-3 py-2 text-xs text-success font-medium">Horários salvos!</p>}
       <div className="flex justify-end">
         <button type="submit" disabled={saving}
-          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors disabled:opacity-50">
+          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}>
           {saving ? "Salvando…" : "Salvar horários"}
         </button>
       </div>
@@ -416,7 +419,7 @@ function Toggle({ checked, onChange }: { checked: boolean; onChange: (v: boolean
       onClick={() => onChange(!checked)}
       className={cn(
         "relative inline-flex h-6 w-11 flex-shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200",
-        checked ? "bg-brand-600" : "bg-neutral-200",
+        checked ? "bg-brand-500" : "bg-neutral-200",
       )}
     >
       <span className={cn(
@@ -492,7 +495,8 @@ function NotificacoesTab() {
       {success && <p className="rounded-md bg-success/10 px-3 py-2 text-xs text-success font-medium">Preferências salvas!</p>}
       <div className="flex justify-end">
         <button type="submit" disabled={saving}
-          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors disabled:opacity-50">
+          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}>
           {saving ? "Salvando…" : "Salvar preferências"}
         </button>
       </div>
@@ -556,7 +560,8 @@ function SegurancaTab() {
         {error   && <p className="rounded-md bg-danger/10 px-3 py-2 text-xs text-danger">{error}</p>}
         {success && <p className="rounded-md bg-success/10 px-3 py-2 text-xs text-success font-medium">Senha alterada com sucesso!</p>}
         <button type="submit" disabled={saving}
-          className="rounded-lg bg-brand-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-brand-600 transition-colors disabled:opacity-50">
+          className="rounded-xl px-5 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}>
           {saving ? "Salvando…" : "Alterar senha"}
         </button>
       </form>
@@ -590,14 +595,22 @@ export default function ConfiguracoesPage() {
         <nav className="flex lg:flex-col gap-1 lg:w-48 flex-shrink-0 overflow-x-auto">
           {TABS.map(({ id, label, icon: Icon }) => (
             <button key={id} onClick={() => setActiveTab(id)}
-              className={cn("flex items-center gap-2.5 rounded-lg px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-colors text-left",
-                activeTab === id ? "bg-brand-50 text-brand-600" : "text-neutral-500 hover:bg-neutral-100 hover:text-neutral-800")}>
+              className={cn("flex items-center gap-2.5 rounded-xl px-3 py-2.5 text-sm font-medium whitespace-nowrap transition-all duration-200 text-left",
+                activeTab === id ? "text-brand-600" : "text-text-tertiary hover:text-text-primary")}
+              style={activeTab === id ? { background: "rgba(127,209,193,0.12)" } : undefined}>
               <Icon className="h-4 w-4 flex-shrink-0" />
               {label}
             </button>
           ))}
         </nav>
-        <div className="flex-1 rounded-xl bg-white shadow-card p-6">
+        <div className="flex-1 p-6 rounded-2xl"
+          style={{
+            background: "rgba(255,255,255,0.65)",
+            backdropFilter: "blur(20px) saturate(160%)",
+            WebkitBackdropFilter: "blur(20px) saturate(160%)",
+            border: "1px solid rgba(255,255,255,0.65)",
+            boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
+          }}>
           {activeTab === "perfil"       && <PerfilTab />}
           {activeTab === "negocio"      && <NegocioTab />}
           {activeTab === "horarios"     && <HorariosTab />}

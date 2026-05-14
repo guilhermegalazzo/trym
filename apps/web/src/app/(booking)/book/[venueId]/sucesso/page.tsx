@@ -14,13 +14,21 @@ export default async function SucessoPage({
   const isPending = pending === "1";
 
   return (
-    <div className="min-h-screen bg-surface-1 flex flex-col items-center justify-center px-4">
-      <div className="w-full max-w-sm space-y-6 text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center px-4"
+      style={{ background: "var(--color-surface-1)" }}>
+      <div className="w-full max-w-sm space-y-6 text-center animate-fade-up">
         <Link href="/" className="inline-block mb-2">
           <TrymLogo className="h-8 mx-auto" />
         </Link>
 
-        <div className="rounded-2xl border border-border-subtle bg-surface-0 p-8 space-y-4">
+        <div className="p-8 space-y-4 rounded-2xl"
+          style={{
+            background: "rgba(255,255,255,0.65)",
+            backdropFilter: "blur(32px) saturate(200%)",
+            WebkitBackdropFilter: "blur(32px) saturate(200%)",
+            border: "1px solid rgba(255,255,255,0.70)",
+            boxShadow: "0 24px 64px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+          }}>
           <div className={`mx-auto h-16 w-16 rounded-full flex items-center justify-center ${isPending ? "bg-amber-50" : "bg-emerald-50"}`}>
             {isPending
               ? <Clock className="h-8 w-8 text-amber-500" />
@@ -42,7 +50,8 @@ export default async function SucessoPage({
 
           <Link
             href={`/book/${venueId}`}
-            className="block w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+            className="block w-full rounded-xl px-4 py-3 text-sm font-semibold text-ink transition-all"
+            style={{ background: "var(--accent)", boxShadow: "0 4px 12px rgba(127,209,193,0.35)" }}
           >
             Fazer outro agendamento
           </Link>

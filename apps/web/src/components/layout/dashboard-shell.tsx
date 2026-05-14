@@ -43,7 +43,7 @@ export function DashboardShell({
   }, []);
 
   return (
-    <div className="flex h-screen bg-surface-1">
+    <div className="flex h-screen bg-surface-1" style={{ background: "var(--color-surface-1)" }}>
       {/* Mobile overlay */}
       {sidebarOpen && (
         <div

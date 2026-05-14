@@ -36,13 +36,21 @@ export default function RecuperarSenhaPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-neutral-50 px-4 py-12">
+    <div className="min-h-screen flex items-center justify-center px-4 py-12 animate-fade-up"
+      style={{ background: "var(--color-surface-1)" }}>
       <div className="w-full max-w-sm">
         <div className="flex flex-col items-center mb-10">
           <TrymLogo iconSize={48} />
         </div>
 
-        <div className="bg-white rounded-2xl shadow-card p-8 space-y-6">
+        <div className="p-8 space-y-6 rounded-2xl"
+          style={{
+            background: "rgba(255,255,255,0.65)",
+            backdropFilter: "blur(32px) saturate(200%)",
+            WebkitBackdropFilter: "blur(32px) saturate(200%)",
+            border: "1px solid rgba(255,255,255,0.70)",
+            boxShadow: "0 24px 64px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+          }}>
           {sent ? (
             <div className="flex flex-col items-center text-center space-y-4">
               <div className="flex h-16 w-16 items-center justify-center rounded-full bg-emerald-100">
@@ -79,7 +87,7 @@ export default function RecuperarSenhaPage() {
                       onChange={e => setEmail(e.target.value)}
                       required
                       placeholder="seu@email.com"
-                      className="w-full rounded-xl border border-neutral-200 pl-9 pr-4 py-3 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20 transition-all"
+                      className="w-full rounded-xl border border-white/60 bg-white/60 backdrop-blur-sm pl-9 pr-4 py-3 text-sm outline-none focus:border-brand-400 focus:ring-2 focus:ring-brand-400/20 transition-all text-text-primary placeholder:text-text-tertiary"
                     />
                   </div>
                 </div>
@@ -89,7 +97,8 @@ export default function RecuperarSenhaPage() {
                 <button
                   type="submit"
                   disabled={loading}
-                  className="w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700 disabled:opacity-60 transition-colors"
+                  className="w-full rounded-xl px-4 py-3 text-sm font-semibold text-ink disabled:opacity-60 transition-all"
+                  style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(127,209,193,0.40)" }}
                 >
                   {loading ? "Enviando…" : "Enviar link de recuperação"}
                 </button>

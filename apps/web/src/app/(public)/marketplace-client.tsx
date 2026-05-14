@@ -12,54 +12,45 @@ const CAT_CONFIG: Record<string, {
   icon: React.ElementType;
   bannerFrom: string;
   bannerTo: string;
-  pill: string;
-  pillText: string;
-  activePill: string;
-  activePillText: string;
 }> = {
-  beleza: {
-    icon: Scissors,
-    bannerFrom: "from-rose-400", bannerTo: "to-pink-500",
-    pill: "bg-rose-50 border-rose-200 text-rose-700",
-    pillText: "text-rose-700",
-    activePill: "bg-rose-500 border-rose-500 text-white",
-    activePillText: "text-white",
-  },
-  pet: {
-    icon: PawPrint,
-    bannerFrom: "from-emerald-400", bannerTo: "to-teal-500",
-    pill: "bg-emerald-50 border-emerald-200 text-emerald-700",
-    pillText: "text-emerald-700",
-    activePill: "bg-emerald-500 border-emerald-500 text-white",
-    activePillText: "text-white",
-  },
-  fitness: {
-    icon: Dumbbell,
-    bannerFrom: "from-orange-400", bannerTo: "to-amber-500",
-    pill: "bg-orange-50 border-orange-200 text-orange-700",
-    pillText: "text-orange-700",
-    activePill: "bg-orange-500 border-orange-500 text-white",
-    activePillText: "text-white",
-  },
+  beleza:  { icon: Scissors, bannerFrom: "from-rose-400",    bannerTo: "to-pink-500"   },
+  pet:     { icon: PawPrint, bannerFrom: "from-emerald-400", bannerTo: "to-teal-500"   },
+  fitness: { icon: Dumbbell, bannerFrom: "from-orange-400",  bannerTo: "to-amber-500"  },
 };
-
 const DEFAULT_CFG = CAT_CONFIG.beleza;
 
 // ─── Venue card ───────────────────────────────────────────────────────────────
 
 function VenueCard({ venue }: { venue: PublicVenue }) {
-  const slug = venue.categories?.slug ?? "beleza";
-  const cfg = CAT_CONFIG[slug] ?? DEFAULT_CFG;
-  const Icon = cfg.icon;
-  const initial = venue.name[0]?.toUpperCase() ?? "V";
+  const slug     = venue.categories?.slug ?? "beleza";
+  const cfg      = CAT_CONFIG[slug] ?? DEFAULT_CFG;
+  const Icon     = cfg.icon;
+  const initial  = venue.name[0]?.toUpperCase() ?? "V";
   const location = [venue.city, venue.state].filter(Boolean).join(", ");
 
   return (
     <Link
       href={`/book/${venue.id}`}
-      className="group flex flex-col rounded-2xl bg-white border border-neutral-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 overflow-hidden"
+      className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300"
+      style={{
+        background: "rgba(255,255,255,0.65)",
+        backdropFilter: "blur(20px) saturate(160%)",
+        WebkitBackdropFilter: "blur(20px) saturate(160%)",
+        border: "1px solid rgba(255,255,255,0.65)",
+        boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
+      }}
+      onMouseEnter={e => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.boxShadow = "0 16px 48px rgba(10,10,10,0.10), 0 0 32px rgba(127,209,193,0.12), inset 0 1px 0 rgba(255,255,255,0.9)";
+        el.style.transform = "translateY(-4px)";
+      }}
+      onMouseLeave={e => {
+        const el = e.currentTarget as HTMLAnchorElement;
+        el.style.boxShadow = "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)";
+        el.style.transform = "translateY(0)";
+      }}
     >
-      {/* Warm gradient banner */}
+      {/* Gradient banner */}
       <div className={cn(
         "relative h-28 bg-gradient-to-br flex items-center justify-center",
         cfg.bannerFrom, cfg.bannerTo,
@@ -69,7 +60,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         </div>
         <div className="absolute top-3 right-3">
           <span className="flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold text-neutral-700">
-            <Icon className="h-3 w-3" />
+            <Icon className="h-3 w-3" strokeWidth={1.5} />
             {venue.categories?.name ?? "Serviço"}
           </span>
         </div>
@@ -77,22 +68,22 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
 
       {/* Body */}
       <div className="flex flex-1 flex-col p-4 gap-2">
-        <p className="text-sm font-bold text-neutral-900 group-hover:text-rose-600 transition-colors line-clamp-1">
+        <p className="text-sm font-bold text-text-primary group-hover:text-brand-600 transition-colors line-clamp-1">
           {venue.name}
         </p>
         {location && (
-          <p className="flex items-center gap-1 text-xs text-neutral-400">
-            <MapPin className="h-3 w-3 flex-shrink-0" />
+          <p className="flex items-center gap-1 text-xs text-text-tertiary">
+            <MapPin className="h-3 w-3 flex-shrink-0" strokeWidth={1.5} />
             {location}
           </p>
         )}
         {venue.description && (
-          <p className="text-xs text-neutral-500 line-clamp-2 flex-1">{venue.description}</p>
+          <p className="text-xs text-text-tertiary line-clamp-2 flex-1">{venue.description}</p>
         )}
         <div className="flex items-center justify-between pt-1 mt-auto">
-          <span className="text-[10px] text-neutral-400 font-medium">Agendamento online</span>
-          <span className="flex items-center gap-1 text-xs font-semibold text-rose-500 group-hover:gap-2 transition-all">
-            Agendar <ArrowRight className="h-3 w-3" />
+          <span className="text-[10px] text-text-tertiary font-medium">Agendamento online</span>
+          <span className="flex items-center gap-1 text-xs font-semibold text-brand-600 group-hover:gap-2 transition-all">
+            Agendar <ArrowRight className="h-3 w-3" strokeWidth={1.5} />
           </span>
         </div>
       </div>
@@ -108,7 +99,7 @@ interface Props {
 }
 
 export function MarketplaceClient({ venues, categories }: Props) {
-  const [search, setSearch] = useState("");
+  const [search, setSearch]               = useState("");
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
 
   const filtered = venues.filter(v => {
@@ -123,41 +114,62 @@ export function MarketplaceClient({ venues, categories }: Props) {
   });
 
   return (
-    <div className="min-h-screen bg-[#FFFAF6] font-sans antialiased">
+    <div className="min-h-screen" style={{ background: "var(--color-surface-1)" }}>
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
-      <div className="relative overflow-hidden bg-gradient-to-br from-rose-50 via-amber-50 to-orange-50 py-24 px-6">
-        {/* Soft warm blobs */}
+      <div className="relative overflow-hidden py-28 px-6"
+        style={{ background: "linear-gradient(135deg, #FAF7F2 0%, #F0FBF8 50%, #FAF7F2 100%)" }}>
+        {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0">
-          <div className="animate-blob absolute -top-20 right-0 h-72 w-72 rounded-full bg-rose-200/40 blur-3xl" />
-          <div className="animate-blob2 absolute -bottom-16 left-0 h-72 w-72 rounded-full bg-amber-200/40 blur-3xl" />
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 h-96 w-96 rounded-full bg-pink-100/30 blur-3xl" />
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full opacity-30"
+            style={{ background: "var(--accent-glow)", filter: "blur(80px)" }} />
         </div>
 
         <div className="relative mx-auto max-w-2xl text-center">
-          {/* Pill badge */}
-          <div className="inline-flex items-center gap-2 rounded-full bg-white/70 backdrop-blur-sm border border-rose-200/60 px-4 py-1.5 text-xs font-semibold text-rose-600 mb-6 shadow-sm">
-            <Sparkles className="h-3.5 w-3.5" />
+          {/* Badge */}
+          <div
+            className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-brand-700 mb-6"
+            style={{
+              background: "rgba(255,255,255,0.70)",
+              backdropFilter: "blur(16px)",
+              WebkitBackdropFilter: "blur(16px)",
+              border: "1px solid rgba(127,209,193,0.30)",
+              boxShadow: "0 2px 12px rgba(127,209,193,0.15)",
+            }}
+          >
+            <Sparkles className="h-3.5 w-3.5 text-brand-500" strokeWidth={1.5} />
             Reserve em segundos, sem ligação
           </div>
 
-          <h1 className="text-4xl sm:text-5xl font-black leading-tight tracking-tight text-neutral-900 mb-4">
+          <h1
+            className="text-5xl font-black leading-tight text-text-primary mb-4"
+            style={{ letterSpacing: "-0.03em" }}
+          >
             Agende serviços<br />
-            <span className="text-rose-500">perto de você</span>
+            <span className="text-gradient-accent">perto de você</span>
           </h1>
-          <p className="text-neutral-500 text-lg mb-10 max-w-md mx-auto">
+          <p className="text-text-tertiary text-lg mb-10 max-w-md mx-auto">
             Beleza, pet e fitness — os melhores profissionais do Brasil em um só lugar.
           </p>
 
-          {/* Search bar */}
-          <div className="flex items-center gap-3 rounded-2xl bg-white px-4 py-3.5 shadow-md border border-neutral-100 max-w-lg mx-auto">
-            <Search className="h-5 w-5 text-neutral-400 flex-shrink-0" />
+          {/* Glass search bar */}
+          <div
+            className="flex items-center gap-3 px-4 py-3.5 max-w-lg mx-auto rounded-2xl"
+            style={{
+              background: "rgba(255,255,255,0.75)",
+              backdropFilter: "blur(24px) saturate(180%)",
+              WebkitBackdropFilter: "blur(24px) saturate(180%)",
+              border: "1px solid rgba(255,255,255,0.70)",
+              boxShadow: "0 8px 32px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
+            }}
+          >
+            <Search className="h-5 w-5 text-text-tertiary flex-shrink-0" strokeWidth={1.5} />
             <input
               type="text"
               placeholder="Buscar por salão, cidade ou serviço…"
               value={search}
               onChange={e => setSearch(e.target.value)}
-              className="flex-1 bg-transparent text-sm text-neutral-800 placeholder:text-neutral-400 outline-none"
+              className="flex-1 bg-transparent text-sm text-text-primary placeholder:text-text-tertiary outline-none"
             />
           </div>
         </div>
@@ -171,29 +183,45 @@ export function MarketplaceClient({ venues, categories }: Props) {
           <div className="flex items-center gap-2 mb-8 flex-wrap">
             <button
               onClick={() => setActiveCategory(null)}
-              className={cn(
-                "rounded-xl px-4 py-2 text-sm font-semibold transition-all border",
-                !activeCategory
-                  ? "bg-neutral-900 text-white border-neutral-900 shadow-sm"
-                  : "bg-white text-neutral-500 border-neutral-200 hover:border-neutral-400 hover:text-neutral-700",
-              )}
+              className="rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200"
+              style={!activeCategory ? {
+                background: "var(--ink)",
+                color: "#fff",
+                boxShadow: "0 4px 12px rgba(10,10,10,0.15)",
+              } : {
+                background: "rgba(255,255,255,0.65)",
+                backdropFilter: "blur(16px)",
+                WebkitBackdropFilter: "blur(16px)",
+                border: "1px solid rgba(255,255,255,0.60)",
+                color: "var(--ink-muted)",
+                boxShadow: "0 2px 8px rgba(10,10,10,0.04)",
+              }}
             >
               Todos
             </button>
             {categories.map(cat => {
-              const cfg = CAT_CONFIG[cat.slug] ?? DEFAULT_CFG;
-              const Icon = cfg.icon;
+              const cfg    = CAT_CONFIG[cat.slug] ?? DEFAULT_CFG;
+              const Icon   = cfg.icon;
               const active = activeCategory === cat.slug;
               return (
                 <button
                   key={cat.id}
                   onClick={() => setActiveCategory(active ? null : cat.slug)}
-                  className={cn(
-                    "flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all border",
-                    active ? cfg.activePill : `bg-white ${cfg.pill}`,
-                  )}
+                  className="flex items-center gap-2 rounded-xl px-4 py-2 text-sm font-semibold transition-all duration-200"
+                  style={active ? {
+                    background: "var(--accent)",
+                    color: "var(--ink)",
+                    boxShadow: "0 4px 12px rgba(127,209,193,0.35)",
+                  } : {
+                    background: "rgba(255,255,255,0.65)",
+                    backdropFilter: "blur(16px)",
+                    WebkitBackdropFilter: "blur(16px)",
+                    border: "1px solid rgba(255,255,255,0.60)",
+                    color: "var(--ink-muted)",
+                    boxShadow: "0 2px 8px rgba(10,10,10,0.04)",
+                  }}
                 >
-                  <Icon className="h-4 w-4" />
+                  <Icon className="h-4 w-4" strokeWidth={1.5} />
                   {cat.name}
                 </button>
               );
@@ -203,12 +231,12 @@ export function MarketplaceClient({ venues, categories }: Props) {
 
         {/* Results header */}
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-xl font-bold text-neutral-900">
+          <h2 className="text-xl font-bold text-text-primary" style={{ letterSpacing: "-0.02em" }}>
             {activeCategory
               ? categories.find(c => c.slug === activeCategory)?.name
               : "Todos os estabelecimentos"}
           </h2>
-          <span className="text-sm text-neutral-400">
+          <span className="text-sm text-text-tertiary">
             {filtered.length} {filtered.length === 1 ? "resultado" : "resultados"}
           </span>
         </div>
@@ -216,16 +244,19 @@ export function MarketplaceClient({ venues, categories }: Props) {
         {/* Venue grid */}
         {filtered.length === 0 ? (
           <div className="flex flex-col items-center justify-center py-24 text-center">
-            <div className="flex h-16 w-16 items-center justify-center rounded-2xl bg-rose-50 mb-4">
-              <Search className="h-8 w-8 text-rose-300" />
+            <div
+              className="flex h-16 w-16 items-center justify-center rounded-2xl mb-4"
+              style={{ background: "rgba(127,209,193,0.12)", border: "1px solid rgba(127,209,193,0.20)" }}
+            >
+              <Search className="h-8 w-8 text-brand-400" strokeWidth={1.5} />
             </div>
-            <p className="text-base font-bold text-neutral-800 mb-1">Nenhum resultado encontrado</p>
-            <p className="text-sm text-neutral-400 max-w-xs">
+            <p className="text-base font-bold text-text-primary mb-1">Nenhum resultado encontrado</p>
+            <p className="text-sm text-text-tertiary max-w-xs">
               Tente buscar por outro nome ou remova os filtros.
             </p>
             <button
               onClick={() => { setSearch(""); setActiveCategory(null); }}
-              className="mt-4 text-sm font-semibold text-rose-500 hover:underline"
+              className="mt-4 text-sm font-semibold text-brand-600 hover:underline transition-colors"
             >
               Limpar filtros
             </button>
@@ -236,23 +267,29 @@ export function MarketplaceClient({ venues, categories }: Props) {
           </div>
         )}
 
-        {/* Empty state — no venues registered yet */}
+        {/* Empty state */}
         {venues.length === 0 && (
-          <div className="mt-12 rounded-2xl border-2 border-dashed border-neutral-200 bg-white p-16 text-center">
-            <div className="mx-auto mb-4 h-16 w-16 rounded-2xl bg-rose-50 flex items-center justify-center">
-              <Sparkles className="h-8 w-8 text-rose-400" />
+          <div
+            className="mt-12 p-16 text-center rounded-2xl"
+            style={{
+              border: "2px dashed rgba(127,209,193,0.30)",
+              background: "rgba(255,255,255,0.40)",
+            }}
+          >
+            <div className="mx-auto mb-4 h-16 w-16 rounded-2xl flex items-center justify-center"
+              style={{ background: "rgba(127,209,193,0.12)" }}>
+              <Sparkles className="h-8 w-8 text-brand-500" strokeWidth={1.5} />
             </div>
-            <p className="text-base font-semibold text-neutral-800 mb-2">
-              Seja o primeiro do Trym
-            </p>
-            <p className="text-sm text-neutral-400 mb-6">
+            <p className="text-base font-semibold text-text-primary mb-2">Seja o primeiro do Trym</p>
+            <p className="text-sm text-text-tertiary mb-6">
               Nenhum estabelecimento cadastrado ainda. Junte-se e alcance novos clientes.
             </p>
             <Link
               href="/signup"
-              className="inline-flex items-center gap-2 rounded-xl bg-rose-500 px-6 py-3 text-sm font-semibold text-white hover:bg-rose-600 transition-colors"
+              className="inline-flex items-center gap-2 rounded-xl px-6 py-3 text-sm font-semibold text-ink transition-all duration-200 hover:brightness-105"
+              style={{ background: "var(--accent)", boxShadow: "0 4px 16px rgba(127,209,193,0.35)" }}
             >
-              Cadastrar meu negócio <ArrowRight className="h-4 w-4" />
+              Cadastrar meu negócio <ArrowRight className="h-4 w-4" strokeWidth={1.5} />
             </Link>
           </div>
         )}
