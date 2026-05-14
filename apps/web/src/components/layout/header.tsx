@@ -104,11 +104,11 @@ export function Header({ userEmail, userName, onMenuToggle }: HeaderProps) {
     <header
       className="flex h-14 items-center justify-between px-4 lg:px-6 gap-3"
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background: "rgba(255,255,255,0.70)",
         backdropFilter: "blur(24px) saturate(180%)",
         WebkitBackdropFilter: "blur(24px) saturate(180%)",
-        borderBottom: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 2px 24px rgba(0,0,0,0.50)",
+        borderBottom: "1px solid rgba(255,255,255,0.50)",
+        boxShadow: "0 2px 16px rgba(10,10,10,0.04)",
       }}
     >
       {/* Mobile hamburger */}
@@ -146,14 +146,14 @@ export function Header({ userEmail, userName, onMenuToggle }: HeaderProps) {
             <div
               className="absolute right-0 top-full mt-2 z-50 w-80 rounded-2xl overflow-hidden"
               style={{
-                background: "rgba(18,18,18,0.90)",
+                background: "rgba(255,255,255,0.85)",
                 backdropFilter: "blur(32px) saturate(200%)",
                 WebkitBackdropFilter: "blur(32px) saturate(200%)",
-                border: "1px solid rgba(255,255,255,0.10)",
-                boxShadow: "0 24px 64px rgba(0,0,0,0.60), 0 8px 24px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
+                border: "1px solid rgba(255,255,255,0.70)",
+                boxShadow: "0 24px 64px rgba(10,10,10,0.12), 0 8px 24px rgba(10,10,10,0.06), inset 0 1px 0 rgba(255,255,255,0.9)",
               }}
             >
-              <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}>
+              <div className="flex items-center justify-between px-4 py-3" style={{ borderBottom: "1px solid rgba(10,10,10,0.06)" }}>
                 <p className="text-sm font-semibold text-text-primary">Próximos agendamentos</p>
                 <button
                   onClick={() => setBellOpen(false)}
@@ -178,7 +178,7 @@ export function Header({ userEmail, userName, onMenuToggle }: HeaderProps) {
                     key={apt.id}
                     onClick={() => { setBellOpen(false); router.push("/agendamentos"); }}
                     className="flex w-full items-start gap-3 px-4 py-3 text-left transition-all duration-200 hover:bg-brand-50/40"
-                    style={i > 0 ? { borderTop: "1px solid rgba(255,255,255,0.06)" } : undefined}
+                    style={i > 0 ? { borderTop: "1px solid rgba(10,10,10,0.05)" } : undefined}
                   >
                     <div className="mt-0.5 flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-xl"
                       style={{ background: "rgba(127,209,193,0.15)" }}>
@@ -198,7 +198,7 @@ export function Header({ userEmail, userName, onMenuToggle }: HeaderProps) {
               </div>
 
               {notifications.length > 0 && (
-                <div className="px-4 py-2.5" style={{ borderTop: "1px solid rgba(255,255,255,0.07)", background: "rgba(127,209,193,0.06)" }}>
+                <div className="px-4 py-2.5" style={{ borderTop: "1px solid rgba(10,10,10,0.06)", background: "rgba(127,209,193,0.06)" }}>
                   <button
                     onClick={() => { setBellOpen(false); router.push("/agendamentos"); }}
                     className="text-xs font-semibold text-brand-600 hover:underline"

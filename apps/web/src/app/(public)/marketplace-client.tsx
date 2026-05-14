@@ -33,20 +33,20 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
       href={`/book/${venue.id}`}
       className="group flex flex-col rounded-2xl overflow-hidden transition-all duration-300"
       style={{
-        background: "rgba(255,255,255,0.06)",
+        background: "rgba(255,255,255,0.65)",
         backdropFilter: "blur(20px) saturate(160%)",
         WebkitBackdropFilter: "blur(20px) saturate(160%)",
-        border: "1px solid rgba(255,255,255,0.08)",
-        boxShadow: "0 2px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
+        border: "1px solid rgba(255,255,255,0.65)",
+        boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
       }}
       onMouseEnter={e => {
         const el = e.currentTarget as HTMLAnchorElement;
-        el.style.boxShadow = "0 16px 48px rgba(0,0,0,0.55), 0 0 32px rgba(127,209,193,0.12), inset 0 1px 0 rgba(255,255,255,0.12)";
+        el.style.boxShadow = "0 16px 48px rgba(10,10,10,0.10), 0 0 32px rgba(127,209,193,0.12), inset 0 1px 0 rgba(255,255,255,0.9)";
         el.style.transform = "translateY(-4px)";
       }}
       onMouseLeave={e => {
         const el = e.currentTarget as HTMLAnchorElement;
-        el.style.boxShadow = "0 2px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)";
+        el.style.boxShadow = "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)";
         el.style.transform = "translateY(0)";
       }}
     >
@@ -118,7 +118,7 @@ export function MarketplaceClient({ venues, categories }: Props) {
 
       {/* ── HERO ─────────────────────────────────────────────────────────────── */}
       <div className="relative overflow-hidden py-28 px-6"
-        style={{ background: "linear-gradient(135deg, #0D0D0D 0%, #111816 50%, #0D0D0D 100%)" }}>
+        style={{ background: "linear-gradient(135deg, #FAF7F2 0%, #F0FBF8 50%, #FAF7F2 100%)" }}>
         {/* Ambient glow */}
         <div className="pointer-events-none absolute inset-0">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 h-96 w-96 rounded-full opacity-30"
@@ -130,7 +130,7 @@ export function MarketplaceClient({ venues, categories }: Props) {
           <div
             className="inline-flex items-center gap-2 rounded-full px-4 py-1.5 text-xs font-semibold text-brand-700 mb-6"
             style={{
-              background: "rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.70)",
               backdropFilter: "blur(16px)",
               WebkitBackdropFilter: "blur(16px)",
               border: "1px solid rgba(127,209,193,0.30)",
@@ -156,11 +156,11 @@ export function MarketplaceClient({ venues, categories }: Props) {
           <div
             className="flex items-center gap-3 px-4 py-3.5 max-w-lg mx-auto rounded-2xl"
             style={{
-              background: "rgba(255,255,255,0.08)",
+              background: "rgba(255,255,255,0.75)",
               backdropFilter: "blur(24px) saturate(180%)",
               WebkitBackdropFilter: "blur(24px) saturate(180%)",
-              border: "1px solid rgba(255,255,255,0.12)",
-              boxShadow: "0 8px 32px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.10)",
+              border: "1px solid rgba(255,255,255,0.70)",
+              boxShadow: "0 8px 32px rgba(10,10,10,0.08), inset 0 1px 0 rgba(255,255,255,0.9)",
             }}
           >
             <Search className="h-5 w-5 text-text-tertiary flex-shrink-0" strokeWidth={1.5} />
@@ -187,14 +187,14 @@ export function MarketplaceClient({ venues, categories }: Props) {
               style={!activeCategory ? {
                 background: "var(--ink)",
                 color: "#fff",
-                boxShadow: "0 4px 12px rgba(0,0,0,0.40)",
+                boxShadow: "0 4px 12px rgba(10,10,10,0.15)",
               } : {
-                background: "rgba(255,255,255,0.06)",
+                background: "rgba(255,255,255,0.65)",
                 backdropFilter: "blur(16px)",
                 WebkitBackdropFilter: "blur(16px)",
-                border: "1px solid rgba(255,255,255,0.10)",
+                border: "1px solid rgba(255,255,255,0.60)",
                 color: "var(--ink-muted)",
-                boxShadow: "0 2px 8px rgba(0,0,0,0.30)",
+                boxShadow: "0 2px 8px rgba(10,10,10,0.04)",
               }}
             >
               Todos
@@ -213,12 +213,12 @@ export function MarketplaceClient({ venues, categories }: Props) {
                     color: "var(--ink)",
                     boxShadow: "0 4px 12px rgba(127,209,193,0.35)",
                   } : {
-                    background: "rgba(255,255,255,0.06)",
+                    background: "rgba(255,255,255,0.65)",
                     backdropFilter: "blur(16px)",
                     WebkitBackdropFilter: "blur(16px)",
-                    border: "1px solid rgba(255,255,255,0.10)",
+                    border: "1px solid rgba(255,255,255,0.60)",
                     color: "var(--ink-muted)",
-                    boxShadow: "0 2px 8px rgba(0,0,0,0.30)",
+                    boxShadow: "0 2px 8px rgba(10,10,10,0.04)",
                   }}
                 >
                   <Icon className="h-4 w-4" strokeWidth={1.5} />
@@ -273,7 +273,7 @@ export function MarketplaceClient({ venues, categories }: Props) {
             className="mt-12 p-16 text-center rounded-2xl"
             style={{
               border: "2px dashed rgba(127,209,193,0.30)",
-              background: "rgba(255,255,255,0.04)",
+              background: "rgba(255,255,255,0.40)",
             }}
           >
             <div className="mx-auto mb-4 h-16 w-16 rounded-2xl flex items-center justify-center"

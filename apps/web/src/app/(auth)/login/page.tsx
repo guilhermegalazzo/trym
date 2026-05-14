@@ -55,11 +55,11 @@ export default function LoginPage() {
         <div
           className="p-8 space-y-6 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.07)",
+            background: "rgba(255,255,255,0.65)",
             backdropFilter: "blur(32px) saturate(200%)",
             WebkitBackdropFilter: "blur(32px) saturate(200%)",
-            border: "1px solid rgba(255,255,255,0.10)",
-            boxShadow: "0 24px 64px rgba(0,0,0,0.55), 0 8px 24px rgba(0,0,0,0.35), inset 0 1px 0 rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.70)",
+            boxShadow: "0 24px 64px rgba(10,10,10,0.08), 0 8px 24px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.9)",
           }}
         >
           <div>

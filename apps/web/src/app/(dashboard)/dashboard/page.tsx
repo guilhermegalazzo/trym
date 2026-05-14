@@ -27,11 +27,11 @@ function formatCurrency(cents: number) {
 }
 
 const glassCard = {
-  background: "rgba(255,255,255,0.06)",
+  background: "rgba(255,255,255,0.65)",
   backdropFilter: "blur(20px) saturate(160%)",
   WebkitBackdropFilter: "blur(20px) saturate(160%)",
-  border: "1px solid rgba(255,255,255,0.08)",
-  boxShadow: "0 2px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
+  border: "1px solid rgba(255,255,255,0.65)",
+  boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
   borderRadius: "20px",
 };
 
@@ -244,7 +244,7 @@ export default async function DashboardPage() {
         >
           <div
             className="px-6 py-4 flex items-center justify-between"
-            style={{ borderBottom: "1px solid rgba(255,255,255,0.07)" }}
+            style={{ borderBottom: "1px solid rgba(10,10,10,0.05)" }}
           >
             <h2 className="text-sm font-semibold text-text-primary">Próximos agendamentos</h2>
             <Link href="/agendamentos" className="text-xs font-medium text-brand-600 hover:underline transition-colors">
@@ -261,7 +261,7 @@ export default async function DashboardPage() {
                 <li
                   key={apt.id}
                   className="flex items-center gap-4 px-6 py-4 hover:bg-brand-50/30 transition-colors"
-                  style={i > 0 ? { borderTop: "1px solid rgba(255,255,255,0.06)" } : undefined}
+                  style={i > 0 ? { borderTop: "1px solid rgba(10,10,10,0.04)" } : undefined}
                 >
                   <div className="flex-shrink-0 w-12 text-center">
                     <div className="text-xs font-mono font-bold text-brand-600">{timeLabel}</div>
@@ -338,8 +338,8 @@ export default async function DashboardPage() {
               href="/configuracoes"
               className="flex items-center gap-1.5 rounded-xl px-4 py-2 text-sm font-medium text-text-secondary transition-all hover:bg-brand-50/40"
               style={{
-                background: "rgba(255,255,255,0.08)",
-                border: "1px solid rgba(255,255,255,0.12)",
+                background: "rgba(255,255,255,0.50)",
+                border: "1px solid rgba(255,255,255,0.60)",
               }}
             >
               Configurações

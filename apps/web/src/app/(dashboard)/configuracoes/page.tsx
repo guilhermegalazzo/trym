@@ -605,11 +605,11 @@ export default function ConfiguracoesPage() {
         </nav>
         <div className="flex-1 p-6 rounded-2xl"
           style={{
-            background: "rgba(255,255,255,0.06)",
+            background: "rgba(255,255,255,0.65)",
             backdropFilter: "blur(20px) saturate(160%)",
             WebkitBackdropFilter: "blur(20px) saturate(160%)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            boxShadow: "0 2px 12px rgba(0,0,0,0.40), inset 0 1px 0 rgba(255,255,255,0.08)",
+            border: "1px solid rgba(255,255,255,0.65)",
+            boxShadow: "0 2px 8px rgba(10,10,10,0.04), inset 0 1px 0 rgba(255,255,255,0.8)",
           }}>
           {activeTab === "perfil"       && <PerfilTab />}
           {activeTab === "negocio"      && <NegocioTab />}
