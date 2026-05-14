@@ -2,7 +2,7 @@
 
 import { useState, useRef } from "react";
 import Link from "next/link";
-import { ChevronLeft, ChevronRight, CalendarDays, Plus } from "lucide-react";
+import { ChevronLeft, ChevronRight, CalendarDays, Plus, X, Clock, User, Scissors, CreditCard, Calendar } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CalAppointment, CalTeamMember } from "./page";
 
@@ -35,6 +35,159 @@ function isFemale(name: string): boolean {
   const first = name.trim().split(" ")[0].toLowerCase();
   if (MALE_NAME_EXCEPTIONS.has(first)) return false;
   return first.endsWith("a");
+}
+
+const STATUS_LABELS: Record<string, string> = {
+  confirmed:   "Confirmado",
+  in_progress: "Em andamento",
+  completed:   "Concluído",
+  cancelled:   "Cancelado",
+  no_show:     "Não compareceu",
+};
+
+// ─── Appointment detail drawer ─────────────────────────────────────────────────
+
+function AptDetailDrawer({ apt, onClose }: { apt: CalAppointment; onClose: () => void }) {
+  const customerName = apt.venue_customers?.full_name ?? "Cliente";
+  const female = isFemale(customerName);
+  const statusColors = STATUS_COLORS[apt.status] ?? STATUS_COLORS.confirmed;
+  const accentColors = apt.status === "confirmed"
+    ? (female ? FEMALE_COLORS : STATUS_COLORS.confirmed)
+    : statusColors;
+
+  const date = new Date(apt.scheduled_at);
+  const dateStr = date.toLocaleDateString("pt-BR", { weekday: "long", day: "numeric", month: "long", year: "numeric" });
+  const timeStr = date.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const endTime = new Date(date.getTime() + apt.duration_minutes * 60_000)
+    .toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+  const price = (apt.total_cents / 100).toLocaleString("pt-BR", { style: "currency", currency: "BRL" });
+
+  return (
+    <>
+      {/* Overlay */}
+      <div
+        className="fixed inset-0 bg-black/30 z-40 backdrop-blur-sm"
+        onClick={onClose}
+      />
+
+      {/* Drawer */}
+      <div className="fixed right-0 top-0 h-full w-full max-w-sm bg-white z-50 shadow-2xl flex flex-col animate-in slide-in-from-right duration-200">
+
+        {/* Header */}
+        <div className={cn("flex items-start justify-between p-5 border-b border-border-subtle", accentColors.bg)}>
+          <div className="flex-1 min-w-0">
+            <p className={cn("text-xs font-bold uppercase tracking-widest mb-1", accentColors.text)}>
+              Agendamento
+            </p>
+            <h2 className="text-xl font-black text-text-primary leading-tight truncate">
+              {customerName}
+            </h2>
+          </div>
+          <button
+            onClick={onClose}
+            className="ml-3 mt-0.5 flex-shrink-0 rounded-xl p-2 hover:bg-black/10 transition-colors"
+          >
+            <X className="h-5 w-5 text-text-secondary" />
+          </button>
+        </div>
+
+        {/* Body */}
+        <div className="flex-1 overflow-y-auto p-5 space-y-4">
+
+          {/* Status badge */}
+          <div>
+            <span className={cn(
+              "inline-flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-semibold",
+              statusColors.bg, statusColors.text, statusColors.border,
+            )}>
+              <span className="h-1.5 w-1.5 rounded-full bg-current" />
+              {STATUS_LABELS[apt.status] ?? apt.status}
+            </span>
+          </div>
+
+          {/* Date & Time */}
+          <div className="rounded-2xl border border-border-subtle bg-surface-0 p-4 space-y-3">
+            <div className="flex items-start gap-3">
+              <Calendar className="h-4 w-4 text-text-tertiary mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">Data</p>
+                <p className="text-sm font-semibold text-text-primary capitalize">{dateStr}</p>
+              </div>
+            </div>
+            <div className="flex items-start gap-3">
+              <Clock className="h-4 w-4 text-text-tertiary mt-0.5 flex-shrink-0" />
+              <div>
+                <p className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">Horário</p>
+                <p className="text-sm font-semibold text-text-primary">{timeStr} – {endTime}</p>
+                <p className="text-xs text-text-tertiary">{apt.duration_minutes} minutos</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Services */}
+          {apt.appointment_items.length > 0 && (
+            <div className="rounded-2xl border border-border-subtle bg-surface-0 p-4 space-y-2">
+              <div className="flex items-center gap-2 mb-1">
+                <Scissors className="h-4 w-4 text-text-tertiary" />
+                <p className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">Serviços</p>
+              </div>
+              {apt.appointment_items.map((item, i) => (
+                <p key={i} className="text-sm font-medium text-text-primary pl-6">{item.description}</p>
+              ))}
+            </div>
+          )}
+
+          {/* Team member */}
+          {apt.team_members && (
+            <div className="rounded-2xl border border-border-subtle bg-surface-0 p-4">
+              <div className="flex items-center gap-3">
+                <div className="h-9 w-9 rounded-full bg-gradient-to-br from-brand-400 to-brand-600 flex items-center justify-center flex-shrink-0">
+                  <span className="text-xs font-bold text-white">
+                    {apt.team_members.display_name.slice(0, 2).toUpperCase()}
+                  </span>
+                </div>
+                <div>
+                  <p className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">Profissional</p>
+                  <p className="text-sm font-semibold text-text-primary">{apt.team_members.display_name}</p>
+                </div>
+                <User className="h-4 w-4 text-text-tertiary ml-auto" />
+              </div>
+            </div>
+          )}
+
+          {/* Price */}
+          {apt.total_cents > 0 && (
+            <div className="rounded-2xl border border-border-subtle bg-surface-0 p-4">
+              <div className="flex items-center gap-3">
+                <CreditCard className="h-4 w-4 text-text-tertiary flex-shrink-0" />
+                <div>
+                  <p className="text-[10px] text-text-tertiary uppercase font-bold tracking-wider">Total</p>
+                  <p className="text-lg font-black text-text-primary">{price}</p>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="p-4 border-t border-border-subtle space-y-2">
+          <Link
+            href={`/agendamentos/${apt.id}`}
+            className="flex items-center justify-center w-full rounded-xl bg-brand-600 px-4 py-3 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+            onClick={onClose}
+          >
+            Ver detalhes completos
+          </Link>
+          <button
+            onClick={onClose}
+            className="flex items-center justify-center w-full rounded-xl border border-border-default bg-surface-0 px-4 py-2.5 text-sm font-medium text-text-secondary hover:bg-surface-2 transition-colors"
+          >
+            Fechar
+          </button>
+        </div>
+      </div>
+    </>
+  );
 }
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
@@ -144,10 +297,11 @@ function MiniCalendar({
 
 // ─── Appointment block ─────────────────────────────────────────────────────────
 
-function AptBlock({ apt, overlap = 1, overlapIdx = 0 }: {
+function AptBlock({ apt, overlap = 1, overlapIdx = 0, onSelect }: {
   apt: CalAppointment;
   overlap?: number;
   overlapIdx?: number;
+  onSelect: (apt: CalAppointment) => void;
 }) {
   const startMin  = minutesFromMidnight(apt.scheduled_at);
   const top       = topOffset(startMin);
@@ -164,8 +318,12 @@ function AptBlock({ apt, overlap = 1, overlapIdx = 0 }: {
 
   return (
     <div
+      role="button"
+      tabIndex={0}
+      onClick={() => onSelect(apt)}
+      onKeyDown={(e) => e.key === "Enter" && onSelect(apt)}
       className={cn(
-        "absolute rounded-lg border-l-2 px-2 py-1 overflow-hidden cursor-pointer transition-all hover:z-10 hover:scale-[1.01]",
+        "absolute rounded-lg border-l-2 px-2 py-1 overflow-hidden cursor-pointer transition-all hover:z-10 hover:scale-[1.01] hover:shadow-md",
         colors.bg, colors.border, colors.text,
       )}
       style={{
@@ -191,10 +349,11 @@ function AptBlock({ apt, overlap = 1, overlapIdx = 0 }: {
 
 // ─── Day column (timeline grid) ────────────────────────────────────────────────
 
-function DayColumn({ day, appointments, isToday }: {
+function DayColumn({ day, appointments, isToday, onSelect }: {
   day: Date;
   appointments: CalAppointment[];
   isToday: boolean;
+  onSelect: (apt: CalAppointment) => void;
 }) {
   const totalGridHeight = (GRID_END_HOUR - GRID_START_HOUR) * HOUR_HEIGHT;
 
@@ -237,7 +396,7 @@ function DayColumn({ day, appointments, isToday }: {
       style={{ height: totalGridHeight }}
     >
       {slots.map(({ apt, col, cols }) => (
-        <AptBlock key={apt.id} apt={apt} overlap={cols} overlapIdx={col} />
+        <AptBlock key={apt.id} apt={apt} overlap={cols} overlapIdx={col} onSelect={onSelect} />
       ))}
     </div>
   );
@@ -255,6 +414,7 @@ export function CalendarioClient({
   const today = new Date();
   const [anchorDate, setAnchorDate] = useState(today);
   const [filterMember, setFilterMember] = useState<string | null>(null);
+  const [selectedApt, setSelectedApt] = useState<CalAppointment | null>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const weekDays = getWeekDays(anchorDate);
@@ -288,6 +448,9 @@ export function CalendarioClient({
 
   return (
     <div className="space-y-4">
+      {selectedApt && (
+        <AptDetailDrawer apt={selectedApt} onClose={() => setSelectedApt(null)} />
+      )}
 
       {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-3">
@@ -442,7 +605,7 @@ export function CalendarioClient({
                     ))}
                     {/* Appointment blocks */}
                     <div className="absolute inset-0 pt-0">
-                      <DayColumn day={day} appointments={dayApts} isToday={isToday} />
+                      <DayColumn day={day} appointments={dayApts} isToday={isToday} onSelect={setSelectedApt} />
                     </div>
                     {/* Today line */}
                     {isToday && (() => {
