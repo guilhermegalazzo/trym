@@ -7,7 +7,7 @@ export function BookingLinkButton({ venueId }: { venueId: string }) {
   const [copied, setCopied] = useState(false);
 
   function handleCopy() {
-    const url = `${window.location.origin}/book/${venueId}`;
+    const url = `${window.location.origin}/p/${venueId}`;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
       setTimeout(() => setCopied(false), 2000);
