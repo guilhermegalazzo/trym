@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useRef } from "react";
-import { ChevronLeft, ChevronRight, CalendarDays } from "lucide-react";
+import Link from "next/link";
+import { ChevronLeft, ChevronRight, CalendarDays, Plus } from "lucide-react";
 import { cn } from "@/lib/utils";
 import type { CalAppointment, CalTeamMember } from "./page";
 
@@ -20,11 +21,21 @@ const WEEKDAYS_SHORT = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 const WEEKDAYS_LONG  = ["Dom","Seg","Ter","Qua","Qui","Sex","Sáb"];
 
 const STATUS_COLORS: Record<string, { bg: string; border: string; text: string }> = {
-  confirmed:   { bg: "bg-coral-50",   border: "border-coral-400",   text: "text-coral-800"   },
+  confirmed:   { bg: "bg-brand-50",   border: "border-brand-400",   text: "text-brand-800"   },
   in_progress: { bg: "bg-amber-50",   border: "border-amber-400",   text: "text-amber-800"   },
   completed:   { bg: "bg-emerald-50", border: "border-emerald-400", text: "text-emerald-800" },
   no_show:     { bg: "bg-neutral-100",border: "border-neutral-300", text: "text-neutral-500" },
 };
+
+const FEMALE_COLORS = { bg: "bg-pink-50", border: "border-pink-400", text: "text-pink-800" };
+
+// Heuristic: Brazilian female names typically end in 'a'
+const MALE_NAME_EXCEPTIONS = new Set(["luca","nikita","joshua","andrea","danilo","costa","agatha"]);
+function isFemale(name: string): boolean {
+  const first = name.trim().split(" ")[0].toLowerCase();
+  if (MALE_NAME_EXCEPTIONS.has(first)) return false;
+  return first.endsWith("a");
+}
 
 // ─── Helpers ───────────────────────────────────────────────────────────────────
 
@@ -141,7 +152,11 @@ function AptBlock({ apt, overlap = 1, overlapIdx = 0 }: {
   const startMin  = minutesFromMidnight(apt.scheduled_at);
   const top       = topOffset(startMin);
   const height    = Math.max(apt.duration_minutes * PIXELS_PER_MINUTE, 24);
-  const colors    = STATUS_COLORS[apt.status] ?? STATUS_COLORS.confirmed;
+  const customerName = apt.venue_customers?.full_name ?? "";
+  const colors =
+    apt.status === "confirmed"
+      ? (isFemale(customerName) ? FEMALE_COLORS : STATUS_COLORS.confirmed)
+      : (STATUS_COLORS[apt.status] ?? STATUS_COLORS.confirmed);
   const service   = apt.appointment_items[0]?.description ?? "";
 
   const widthPct  = 100 / overlap;
@@ -288,6 +303,13 @@ export function CalendarioClient({
           <button onClick={goToday} className="rounded-xl border border-border-default bg-surface-0 px-3.5 py-2 text-sm font-medium text-text-secondary hover:bg-surface-2 transition-all">
             Hoje
           </button>
+          <Link
+            href="/agendamentos/novo"
+            className="flex items-center gap-1.5 rounded-xl bg-brand-600 px-3.5 py-2 text-sm font-semibold text-white hover:bg-brand-700 transition-colors"
+          >
+            <Plus className="h-4 w-4" />
+            Novo
+          </Link>
           <div className="flex rounded-xl border border-border-default bg-surface-0 overflow-hidden">
             <button onClick={prevWeek} className="px-2.5 py-2 hover:bg-surface-2 transition-colors border-r border-border-subtle">
               <ChevronLeft className="h-4 w-4 text-text-secondary" />
