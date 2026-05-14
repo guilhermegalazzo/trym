@@ -5,12 +5,14 @@
   },
   "build": {
     "base": {
+      "node": "22.15.0",
       "env": {
-        "EXPO_SKIP_PREPARE": "1"
+        "EXPO_SKIP_PREPARE": "1",
+        "COREPACK_ENABLE_STRICT": "0"
       },
       "cache": {
         "disabled": false,
-        "key": "pnpm-v1"
+        "key": "pnpm-v2"
       }
     },
     "development": {
