@@ -250,7 +250,7 @@ function DateTimeStep({
   const supabase = createClient();
   const [calYear, setCalYear]   = useState(() => new Date().getFullYear());
   const [calMonth, setCalMonth] = useState(() => new Date().getMonth());
-  const [busySlots, setBusySlots] = useState<string[]>([]);
+  const [busySlots, setBusySlots] = useState<{ start: string; duration: number }[]>([]);
   const [loadingSlots, setLoadingSlots] = useState(false);
 
   // Fetch existing appointments for selected date
@@ -262,7 +262,7 @@ function DateTimeStep({
 
     let q = supabase
       .from("appointments")
-      .select("scheduled_at")
+      .select("scheduled_at, duration_minutes")
       .eq("venue_id", venueId)
       .gte("scheduled_at", dayStart)
       .lte("scheduled_at", dayEnd)
@@ -271,7 +271,10 @@ function DateTimeStep({
     if (teamMemberId) q = q.eq("team_member_id", teamMemberId);
 
     q.then(({ data }) => {
-      setBusySlots((data ?? []).map(a => a.scheduled_at.substring(11, 16)));
+      setBusySlots((data ?? []).map(a => ({
+        start: a.scheduled_at.substring(11, 16),
+        duration: (a as { scheduled_at: string; duration_minutes?: number }).duration_minutes ?? 60,
+      })));
       setLoadingSlots(false);
     });
   }, [selectedDate, teamMemberId, venueId]);
@@ -319,10 +322,10 @@ function DateTimeStep({
   function isSlotBusy(slot: string): boolean {
     const slotMin = parseMins(slot);
     const slotEnd = slotMin + totalDuration;
-    return busySlots.some(b => {
-      const bMin = parseMins(b);
-      // busy if any existing apt starts before our slot ends and ends after our slot starts
-      return bMin < slotEnd && bMin + 60 > slotMin;
+    return busySlots.some(({ start, duration }) => {
+      const bMin = parseMins(start);
+      const bEnd = bMin + duration;
+      return bMin < slotEnd && bEnd > slotMin;
     });
   }
 

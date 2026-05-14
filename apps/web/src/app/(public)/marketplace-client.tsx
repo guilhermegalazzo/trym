@@ -63,12 +63,7 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
           <p className="text-xs text-text-secondary line-clamp-2 flex-1">{venue.description}</p>
         )}
         <div className="flex items-center justify-between pt-1 mt-auto">
-          <div className="flex items-center gap-0.5">
-            {[1, 2, 3, 4, 5].map(i => (
-              <Star key={i} className="h-3 w-3 text-amber-400 fill-amber-400" />
-            ))}
-            <span className="ml-1 text-[10px] text-text-tertiary font-medium">Novo</span>
-          </div>
+          <span className="text-[10px] text-text-tertiary font-medium">Agendamento online</span>
           <span className="flex items-center gap-1 text-xs font-semibold text-brand-600 group-hover:gap-2 transition-all">
             Agendar <ArrowRight className="h-3 w-3" />
           </span>

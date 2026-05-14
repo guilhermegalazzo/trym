@@ -3,12 +3,13 @@
 import { useState, useEffect, useRef } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { useRouter } from "next/navigation";
-import { LogOut, Bell, Calendar, X } from "lucide-react";
+import { LogOut, Bell, Calendar, X, Menu } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {
   userEmail: string;
   userName: string;
+  onMenuToggle?: () => void;
 }
 
 type UpcomingApt = {
@@ -33,7 +34,7 @@ function fmtDate(iso: string) {
   return d.toLocaleDateString("pt-BR", { day: "2-digit", month: "short" }) + ` ${fmtTime(iso)}`;
 }
 
-export function Header({ userEmail, userName }: HeaderProps) {
+export function Header({ userEmail, userName, onMenuToggle }: HeaderProps) {
   const router = useRouter();
   const supabase = createClient();
   const [bellOpen, setBellOpen]         = useState(false);
@@ -102,7 +103,16 @@ export function Header({ userEmail, userName }: HeaderProps) {
   }
 
   return (
-    <header className="flex h-13 items-center justify-end border-b border-border-subtle bg-surface-0 px-6 gap-3">
+    <header className="flex h-13 items-center justify-between border-b border-border-subtle bg-surface-0 px-4 lg:px-6 gap-3">
+      {/* Mobile hamburger */}
+      <button
+        onClick={onMenuToggle}
+        className="flex h-8 w-8 items-center justify-center rounded-lg text-text-tertiary hover:bg-surface-2 hover:text-text-secondary transition-colors lg:hidden"
+        aria-label="Menu"
+      >
+        <Menu className="h-5 w-5" />
+      </button>
+      <div className="flex items-center gap-3 ml-auto">
 
       {/* Notification bell */}
       <div ref={bellRef} className="relative">
@@ -199,6 +209,7 @@ export function Header({ userEmail, userName }: HeaderProps) {
           <LogOut className="h-3.5 w-3.5" />
           <span className="hidden sm:inline">Sair</span>
         </button>
+      </div>
       </div>
     </header>
   );

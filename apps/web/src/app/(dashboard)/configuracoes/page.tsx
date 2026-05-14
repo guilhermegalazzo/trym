@@ -381,9 +381,9 @@ function PlanoTab() {
             <li>✓ Relatórios avançados e comissões</li>
             <li>✓ Página pública no marketplace Trym</li>
           </ul>
-          <button className="rounded-xl bg-coral-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-coral-600 transition-colors">
+          <a href="mailto:contato@trym.com.br?subject=Upgrade para Pro" className="inline-block rounded-xl bg-coral-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-coral-600 transition-colors">
             Fazer upgrade para Pro
-          </button>
+          </a>
         </div>
       )}
     </div>

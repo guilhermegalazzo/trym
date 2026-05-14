@@ -193,9 +193,9 @@ export function MarketingClient({ venueId, waEnabled, notifPrefs: initialPrefs }
                   )}
                 </div>
                 <p className="text-xs text-text-secondary">{description}</p>
-                <button className="mt-3 text-xs font-semibold text-brand-600 hover:underline">
+                <a href="/configuracoes" className="mt-3 inline-block text-xs font-semibold text-brand-600 hover:underline">
                   Fazer upgrade →
-                </button>
+                </a>
               </div>
             </div>
           ))}

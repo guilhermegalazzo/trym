@@ -82,7 +82,7 @@ export function Sidebar({
   const pathname = usePathname();
 
   return (
-    <aside className="hidden w-56 flex-shrink-0 bg-surface-0 border-r border-border-subtle lg:flex flex-col h-screen overflow-y-auto">
+    <aside className="w-56 flex-shrink-0 bg-surface-0 border-r border-border-subtle flex flex-col h-screen overflow-y-auto">
       {/* Logo */}
       <div className="px-4 py-4 border-b border-border-subtle">
         <TrymLogo iconSize={30} />
@@ -155,7 +155,7 @@ export function Sidebar({
               WhatsApp automático, relatórios e comissões.
             </p>
             <Link
-              href="/configuracoes/plano"
+              href="/configuracoes"
               className="block w-full rounded-lg px-3 py-1.5 text-center text-xs font-semibold text-white transition-all hover:brightness-110 active:scale-95"
               style={{ background: "linear-gradient(135deg, #F472B6 0%, #EC4899 100%)" }}
             >
@@ -185,7 +185,7 @@ export function Sidebar({
 
       {/* User profile */}
       <div className="border-t border-border-subtle px-3 py-3">
-        <button className="flex w-full items-center gap-2.5 rounded-lg hover:bg-surface-2 px-1.5 py-1.5 transition-colors">
+        <Link href="/configuracoes" className="flex w-full items-center gap-2.5 rounded-lg hover:bg-surface-2 px-1.5 py-1.5 transition-colors">
           <div
             className="h-7 w-7 rounded-full flex items-center justify-center flex-shrink-0 text-[11px] font-bold text-white"
             style={{ background: "linear-gradient(135deg, #2DD4BF 0%, #0F766E 100%)" }}
@@ -197,7 +197,7 @@ export function Sidebar({
             <p className="truncate text-[10px] text-text-tertiary">{userRole}</p>
           </div>
           <ChevronDown className="h-3.5 w-3.5 text-text-tertiary flex-shrink-0" />
-        </button>
+        </Link>
       </div>
     </aside>
   );
