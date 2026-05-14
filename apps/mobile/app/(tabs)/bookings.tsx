@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { View, Text, FlatList, TouchableOpacity, ActivityIndicator, RefreshControl } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { CalendarCheck2, User } from "lucide-react-native";
+import { CalendarCheck2 } from "lucide-react-native";
 import { useVenue } from "@/hooks/use-venue";
 import { useAppointments, type Appointment, type AppointmentFilter } from "@/hooks/use-appointments";
 import { useQueryClient } from "@tanstack/react-query";
@@ -109,7 +109,7 @@ function AptRow({ apt }: { apt: Appointment }) {
 export default function BookingsScreen() {
   const [activeTab, setActiveTab] = useState<AppointmentFilter>("today");
   const { data: venue } = useVenue();
-  const { data: apts = [], isLoading, refetch } = useAppointments(venue?.id, activeTab);
+  const { data: apts = [], isLoading } = useAppointments(venue?.id, activeTab);
   const qc = useQueryClient();
 
   async function onRefresh() {

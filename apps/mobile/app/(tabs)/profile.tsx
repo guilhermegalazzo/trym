@@ -2,7 +2,7 @@ import { View, Text, TouchableOpacity, ScrollView, Alert } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useRouter } from "expo-router";
 import {
-  User, Building2, MapPin, Phone, LogOut,
+  type User, Building2, MapPin, Phone, LogOut,
   ChevronRight, Settings, BarChart2,
 } from "lucide-react-native";
 import { useAuthStore } from "@/stores/auth-store";

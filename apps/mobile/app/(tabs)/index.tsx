@@ -141,7 +141,7 @@ export default function HomeScreen() {
   const { user } = useAuthStore();
   const qc = useQueryClient();
   const { data: venue, isLoading: venueLoading } = useVenue();
-  const { data: todayApts = [], isLoading: aptsLoading, refetch } = useAppointments(venue?.id, "today");
+  const { data: todayApts = [], isLoading: aptsLoading } = useAppointments(venue?.id, "today");
   const { data: stats } = useTodayStats(venue?.id);
 
   const userName = (user?.user_metadata?.full_name as string | undefined) ?? user?.email ?? "";
