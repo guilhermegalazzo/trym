@@ -661,9 +661,37 @@ export function BookingClient({ venue, services, teamMembers, businessHours }: P
       });
       if (result.error) {
         setError(result.error);
-      } else {
-        setDone(true);
+        return;
       }
+
+      // Try Mercado Pago checkout if configured
+      if (result.appointmentId && totalCents > 0) {
+        try {
+          const res = await fetch("/api/mp/create-preference", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              appointmentId: result.appointmentId,
+              venueId: venue.id,
+              items: selectedServiceObjects.map(s => ({
+                title: s.name,
+                quantity: 1,
+                unit_price: s.price_cents / 100,
+              })),
+              payer: { name, email, phone },
+            }),
+          });
+          const json = await res.json() as { checkoutUrl?: string };
+          if (json.checkoutUrl) {
+            window.location.href = json.checkoutUrl;
+            return;
+          }
+        } catch {
+          // MP not configured — fall through to success screen
+        }
+      }
+
+      setDone(true);
     });
   }
 
