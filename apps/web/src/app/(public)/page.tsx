@@ -2,7 +2,7 @@ import { createClient } from "@/lib/supabase/server";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { MarketplaceClient } from "./marketplace-client";
-import type { PublicVenue, PublicCategory } from "../page";
+import type { PublicVenue, PublicCategory } from "./types";
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {

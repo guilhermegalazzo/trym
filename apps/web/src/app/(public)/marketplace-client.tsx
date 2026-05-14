@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Search, MapPin, Scissors, PawPrint, Dumbbell, Star, ArrowRight, Sparkles } from "lucide-react";
-import type { PublicVenue, PublicCategory } from "../page";
+import type { PublicVenue, PublicCategory } from "./types";
 
 // ─── Category icons ───────────────────────────────────────────────────────────
 

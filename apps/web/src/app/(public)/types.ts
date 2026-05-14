@@ -1,6 +1,3 @@
-// Types used by the marketplace homepage and marketplace-client.
-// The actual route handler for "/" lives in app/(public)/page.tsx.
-
 export type PublicVenue = {
   id: string;
   name: string;
