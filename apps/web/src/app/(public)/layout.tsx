@@ -1,23 +1,24 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { TrymLogo } from "@/components/brand/logo";
+import { BottomTabBar } from "./bottom-tab-bar";
 
 export default function PublicLayout({ children }: { children: ReactNode }) {
   return (
     <div className="min-h-screen" style={{ background: "var(--color-surface-1)" }}>
-      {/* Glass navbar */}
+
+      {/* Navbar — desktop: logo + auth links / mobile: logo only */}
       <header
         className="sticky top-0 z-40"
-        style={{
-          background: "#ffffff",
-          borderBottom: "1px solid #EBEBEB",
-        }}
+        style={{ background: "#ffffff", borderBottom: "1px solid #EBEBEB" }}
       >
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-3">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6">
           <Link href="/">
             <TrymLogo iconSize={28} />
           </Link>
-          <div className="flex items-center gap-3">
+
+          {/* Desktop auth links */}
+          <div className="hidden md:flex items-center gap-3">
             <Link
               href="/login"
               className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors"
@@ -35,23 +36,32 @@ export default function PublicLayout({ children }: { children: ReactNode }) {
               Cadastre seu negócio
             </Link>
           </div>
+
+          {/* Mobile: compact login link */}
+          <Link
+            href="/login"
+            className="md:hidden text-sm font-semibold text-brand-600"
+          >
+            Entrar
+          </Link>
         </div>
       </header>
 
-      <main>{children}</main>
+      {/* Main content — add bottom padding on mobile for tab bar */}
+      <main className="pb-20 md:pb-0">{children}</main>
 
-      {/* Footer */}
+      {/* Footer — desktop only */}
       <footer
-        className="mt-16 py-8 text-center"
-        style={{
-          borderTop: "1px solid #EBEBEB",
-          background: "#FAFAFA",
-        }}
+        className="hidden md:block mt-16 py-8 text-center"
+        style={{ borderTop: "1px solid #EBEBEB", background: "#FAFAFA" }}
       >
         <p className="text-xs text-text-tertiary">
           © {new Date().getFullYear()} Trym · Marketplace de serviços de beleza, pet e fitness no Brasil
         </p>
       </footer>
+
+      {/* Bottom tab bar — mobile only */}
+      <BottomTabBar />
     </div>
   );
 }
