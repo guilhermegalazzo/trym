@@ -1,15 +1,17 @@
 "use client";
 /* eslint-disable react-hooks/purity */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useTransition } from "react";
 import { cn } from "@/lib/utils";
-import { Building2, Clock, CreditCard, Bell, Shield, Palette, User } from "lucide-react";
+import { Building2, Clock, CreditCard, Bell, Shield, Palette, User, ImagePlus, X, BanIcon, Trash2, Plus } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
+import { createBlock, deleteBlock } from "./bloqueios-actions";
 
 const TABS = [
   { id: "perfil",        label: "Perfil",          icon: User },
   { id: "negocio",       label: "Meu negócio",     icon: Building2 },
   { id: "horarios",      label: "Horários",        icon: Clock },
+  { id: "bloqueios",     label: "Bloqueios",       icon: BanIcon },
   { id: "pagamentos",    label: "Pagamentos",      icon: CreditCard },
   { id: "notificacoes",  label: "Notificações",    icon: Bell },
   { id: "plano",         label: "Plano",           icon: Palette },
@@ -111,22 +113,26 @@ function PerfilTab() {
 
 function NegocioTab() {
   const supabase = createClient();
-  const [venueId, setVenueId]     = useState<string | null>(null);
-  const [name, setName]           = useState("");
-  const [phone, setPhone]         = useState("");
-  const [address, setAddress]     = useState("");
-  const [city, setCity]           = useState("");
-  const [state, setState]         = useState("");
-  const [description, setDesc]    = useState("");
-  const [loading, setLoading]     = useState(true);
-  const [saving, setSaving]       = useState(false);
-  const [success, setSuccess]     = useState(false);
-  const [error, setError]         = useState("");
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [venueId, setVenueId]         = useState<string | null>(null);
+  const [name, setName]               = useState("");
+  const [phone, setPhone]             = useState("");
+  const [address, setAddress]         = useState("");
+  const [city, setCity]               = useState("");
+  const [state, setState]             = useState("");
+  const [description, setDesc]        = useState("");
+  const [coverImageUrl, setCoverImageUrl] = useState<string | null>(null);
+  const [bannerPreview, setBannerPreview] = useState<string | null>(null);
+  const [uploading, setUploading]     = useState(false);
+  const [loading, setLoading]         = useState(true);
+  const [saving, setSaving]           = useState(false);
+  const [success, setSuccess]         = useState(false);
+  const [error, setError]             = useState("");
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) return;
-      const { data } = await supabase.from("venues").select("id,name,phone,address_line,city,state,description").eq("owner_id", user.id).maybeSingle();
+      const { data } = await supabase.from("venues").select("id,name,phone,address_line,city,state,description,cover_image_url").eq("owner_id", user.id).maybeSingle();
       if (data) {
         setVenueId(data.id);
         setName(data.name ?? "");
@@ -135,10 +141,42 @@ function NegocioTab() {
         setCity(data.city ?? "");
         setState(data.state ?? "");
         setDesc(data.description ?? "");
+        setCoverImageUrl(data.cover_image_url ?? null);
       }
       setLoading(false);
     });
   }, []);
+
+  async function handleBannerUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file || !venueId) return;
+    if (file.size > 5 * 1024 * 1024) { setError("Imagem muito grande. Máximo 5 MB."); return; }
+
+    // Local preview
+    const reader = new FileReader();
+    reader.onload = (ev) => setBannerPreview(ev.target?.result as string);
+    reader.readAsDataURL(file);
+
+    setUploading(true);
+    setError("");
+    const ext = file.name.split(".").pop() ?? "jpg";
+    const path = `${venueId}/banner.${ext}`;
+    const { error: uploadErr } = await supabase.storage.from("venues").upload(path, file, { upsert: true, contentType: file.type });
+    if (uploadErr) { setError("Erro ao enviar imagem. Tente novamente."); setUploading(false); return; }
+    const { data: urlData } = supabase.storage.from("venues").getPublicUrl(path);
+    const publicUrl = `${urlData.publicUrl}?t=${Date.now()}`;
+    await supabase.from("venues").update({ cover_image_url: publicUrl }).eq("id", venueId);
+    setCoverImageUrl(publicUrl);
+    setBannerPreview(null);
+    setUploading(false);
+  }
+
+  async function handleRemoveBanner() {
+    if (!venueId) return;
+    await supabase.from("venues").update({ cover_image_url: null }).eq("id", venueId);
+    setCoverImageUrl(null);
+    setBannerPreview(null);
+  }
 
   async function handleSave(e: React.FormEvent) {
     e.preventDefault();
@@ -155,6 +193,71 @@ function NegocioTab() {
   return (
     <form onSubmit={handleSave} className="space-y-6">
       <h2 className="text-base font-semibold text-neutral-900">Informações do negócio</h2>
+
+      {/* Banner upload */}
+      <div className="space-y-2">
+        <label className="block text-sm font-medium text-neutral-700">Foto de capa</label>
+        <div className="relative rounded-xl overflow-hidden border border-neutral-200 bg-neutral-50"
+          style={{ height: 140 }}>
+          {(bannerPreview ?? coverImageUrl) ? (
+            <>
+              <img
+                src={bannerPreview ?? coverImageUrl!}
+                alt="Capa do negócio"
+                className="h-full w-full object-cover"
+              />
+              <div className="absolute inset-0 bg-black/30 opacity-0 hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => fileInputRef.current?.click()}
+                  className="flex items-center gap-1.5 rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-neutral-800 hover:bg-neutral-100 transition-colors"
+                >
+                  <ImagePlus className="h-3.5 w-3.5" />
+                  Trocar foto
+                </button>
+                <button
+                  type="button"
+                  onClick={handleRemoveBanner}
+                  className="flex items-center gap-1.5 rounded-lg bg-white/90 px-3 py-1.5 text-xs font-semibold text-red-600 hover:bg-white transition-colors"
+                >
+                  <X className="h-3.5 w-3.5" />
+                  Remover
+                </button>
+              </div>
+              {uploading && (
+                <div className="absolute inset-0 bg-black/50 flex items-center justify-center">
+                  <div className="h-5 w-5 rounded-full border-2 border-white border-t-transparent animate-spin" />
+                </div>
+              )}
+            </>
+          ) : (
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={uploading}
+              className="flex h-full w-full flex-col items-center justify-center gap-2 text-neutral-400 hover:text-neutral-600 hover:bg-neutral-100 transition-colors disabled:opacity-50"
+            >
+              {uploading ? (
+                <div className="h-5 w-5 rounded-full border-2 border-neutral-400 border-t-transparent animate-spin" />
+              ) : (
+                <>
+                  <ImagePlus className="h-8 w-8" strokeWidth={1.5} />
+                  <span className="text-xs font-medium">Clique para adicionar uma foto de capa</span>
+                  <span className="text-[11px]">JPG, PNG ou WebP • Máx. 5 MB • Proporção 16:9 ideal</span>
+                </>
+              )}
+            </button>
+          )}
+        </div>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/jpeg,image/png,image/webp"
+          className="hidden"
+          onChange={handleBannerUpload}
+        />
+      </div>
+
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
         <div className="space-y-1">
           <label className="block text-sm font-medium text-neutral-700">Nome do negócio</label>
@@ -581,6 +684,206 @@ function SegurancaTab() {
   );
 }
 
+// ─── Bloqueios Tab ───────────────────────────────────────────────────────────
+
+type Block = {
+  id: string;
+  scheduled_at: string;
+  duration_minutes: number;
+  internal_notes: string | null;
+  team_members: { display_name: string } | null;
+};
+
+function BloqueiosTab() {
+  const supabase = createClient();
+  const [venueId, setVenueId]       = useState<string | null>(null);
+  const [teamMembers, setTeamMembers] = useState<{ id: string; display_name: string }[]>([]);
+  const [blocks, setBlocks]         = useState<Block[]>([]);
+  const [loading, setLoading]       = useState(true);
+  const [pending, startTransition]  = useTransition();
+
+  // Form state
+  const today = new Date().toISOString().slice(0, 10);
+  const [date, setDate]             = useState(today);
+  const [startTime, setStartTime]   = useState("09:00");
+  const [endTime, setEndTime]       = useState("10:00");
+  const [teamMemberId, setTeamMemberId] = useState<string>("");
+  const [reason, setReason]         = useState("");
+  const [formError, setFormError]   = useState("");
+  const [formSuccess, setFormSuccess] = useState(false);
+
+  async function loadData(vid: string) {
+    const now = new Date().toISOString();
+    const [bRes, tmRes] = await Promise.all([
+      supabase
+        .from("appointments")
+        .select("id, scheduled_at, duration_minutes, internal_notes, team_members(display_name)")
+        .eq("venue_id", vid)
+        .eq("source", "block")
+        .gte("scheduled_at", now)
+        .order("scheduled_at"),
+      supabase
+        .from("team_members")
+        .select("id, display_name")
+        .eq("venue_id", vid)
+        .eq("is_active", true)
+        .order("display_name"),
+    ]);
+    setBlocks((bRes.data ?? []) as unknown as Block[]);
+    setTeamMembers((tmRes.data ?? []) as { id: string; display_name: string }[]);
+  }
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return;
+      const { data } = await supabase.from("venues").select("id").eq("owner_id", user.id).maybeSingle();
+      if (data) { setVenueId(data.id); await loadData(data.id); }
+      setLoading(false);
+    });
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  function handleCreate() {
+    setFormError(""); setFormSuccess(false);
+    if (!venueId) return;
+    startTransition(async () => {
+      const { error } = await createBlock({
+        date, startTime, endTime,
+        teamMemberId: teamMemberId || null,
+        reason,
+      });
+      if (error) { setFormError(error); return; }
+      setFormSuccess(true);
+      setReason("");
+      setTimeout(() => setFormSuccess(false), 3000);
+      await loadData(venueId);
+    });
+  }
+
+  function handleDelete(id: string) {
+    if (!venueId) return;
+    startTransition(async () => {
+      await deleteBlock(id);
+      await loadData(venueId);
+    });
+  }
+
+  function fmtBlock(b: Block) {
+    const start = new Date(b.scheduled_at);
+    const end   = new Date(start.getTime() + b.duration_minutes * 60_000);
+    const dateStr = start.toLocaleDateString("pt-BR", { weekday: "short", day: "numeric", month: "short" });
+    const startStr = start.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    const endStr   = end.toLocaleTimeString("pt-BR", { hour: "2-digit", minute: "2-digit" });
+    return { dateStr, startStr, endStr };
+  }
+
+  if (loading) return (
+    <div className="space-y-3 animate-pulse">
+      {[1,2,3].map(i => <div key={i} className="h-12 rounded-lg bg-neutral-100" />)}
+    </div>
+  );
+
+  return (
+    <div className="space-y-6">
+      <div>
+        <h2 className="text-base font-semibold text-neutral-900">Bloquear horários</h2>
+        <p className="mt-1 text-xs text-neutral-500">
+          Marque períodos em que você não quer receber agendamentos. Os clientes não verão esses horários disponíveis.
+        </p>
+      </div>
+
+      {/* New block form */}
+      <div className="rounded-xl border border-neutral-200 bg-neutral-50 p-5 space-y-4">
+        <p className="text-sm font-semibold text-neutral-800 flex items-center gap-2">
+          <Plus className="h-4 w-4" />
+          Novo bloqueio
+        </p>
+        <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <div className="space-y-1 sm:col-span-2">
+            <label className="block text-xs font-medium text-neutral-600">Data</label>
+            <input type="date" value={date} min={today} onChange={e => setDate(e.target.value)}
+              className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20" />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-neutral-600">Das</label>
+            <input type="time" value={startTime} onChange={e => setStartTime(e.target.value)}
+              className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-mono outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20" />
+          </div>
+          <div className="space-y-1">
+            <label className="block text-xs font-medium text-neutral-600">Até</label>
+            <input type="time" value={endTime} onChange={e => setEndTime(e.target.value)}
+              className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm font-mono outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20" />
+          </div>
+          {teamMembers.length > 0 && (
+            <div className="space-y-1 sm:col-span-2">
+              <label className="block text-xs font-medium text-neutral-600">Profissional (opcional)</label>
+              <select value={teamMemberId} onChange={e => setTeamMemberId(e.target.value)}
+                className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20">
+                <option value="">Todos os profissionais</option>
+                {teamMembers.map(tm => (
+                  <option key={tm.id} value={tm.id}>{tm.display_name}</option>
+                ))}
+              </select>
+            </div>
+          )}
+          <div className="space-y-1 sm:col-span-2">
+            <label className="block text-xs font-medium text-neutral-600">Motivo (opcional)</label>
+            <input type="text" value={reason} onChange={e => setReason(e.target.value)}
+              placeholder="Ex: Férias, reunião, evento…"
+              className="w-full rounded-lg border border-neutral-200 bg-white px-3 py-2 text-sm outline-none focus:border-brand-500 focus:ring-2 focus:ring-brand-500/20" />
+          </div>
+        </div>
+        {formError   && <p className="text-xs text-red-600">{formError}</p>}
+        {formSuccess && <p className="text-xs text-emerald-600 font-medium">Bloqueio criado com sucesso!</p>}
+        <button
+          type="button"
+          onClick={handleCreate}
+          disabled={pending}
+          className="flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold text-ink transition-all disabled:opacity-50"
+          style={{ background: "var(--accent)" }}
+        >
+          <BanIcon className="h-4 w-4" />
+          {pending ? "Salvando…" : "Bloquear horário"}
+        </button>
+      </div>
+
+      {/* Existing blocks */}
+      <div className="space-y-2">
+        <p className="text-sm font-semibold text-neutral-800">Bloqueios futuros</p>
+        {blocks.length === 0 ? (
+          <p className="text-xs text-neutral-400 py-4 text-center">Nenhum bloqueio agendado.</p>
+        ) : (
+          blocks.map(b => {
+            const { dateStr, startStr, endStr } = fmtBlock(b);
+            return (
+              <div key={b.id} className="flex items-center gap-3 rounded-xl border border-neutral-100 bg-white p-4">
+                <div className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-lg bg-neutral-100">
+                  <BanIcon className="h-4 w-4 text-neutral-400" />
+                </div>
+                <div className="flex-1 min-w-0">
+                  <p className="text-sm font-semibold text-neutral-800 capitalize">{dateStr}</p>
+                  <p className="text-xs text-neutral-500">
+                    {startStr} – {endStr}
+                    {b.team_members && ` · ${b.team_members.display_name}`}
+                    {b.internal_notes && ` · ${b.internal_notes}`}
+                  </p>
+                </div>
+                <button
+                  onClick={() => handleDelete(b.id)}
+                  disabled={pending}
+                  className="flex-shrink-0 rounded-lg p-2 text-neutral-400 hover:text-red-500 hover:bg-red-50 transition-colors disabled:opacity-40"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            );
+          })
+        )}
+      </div>
+    </div>
+  );
+}
+
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
 export default function ConfiguracoesPage() {
@@ -612,6 +915,7 @@ export default function ConfiguracoesPage() {
           {activeTab === "perfil"       && <PerfilTab />}
           {activeTab === "negocio"      && <NegocioTab />}
           {activeTab === "horarios"     && <HorariosTab />}
+          {activeTab === "bloqueios"    && <BloqueiosTab />}
           {activeTab === "plano"        && <PlanoTab />}
           {activeTab === "pagamentos"   && (
             <div className="flex flex-col items-center justify-center py-20 text-center">

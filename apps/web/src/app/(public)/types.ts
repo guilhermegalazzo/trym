@@ -7,6 +7,7 @@ export type PublicVenue = {
   address_line: string | null;
   phone: string | null;
   category_id: string | null;
+  cover_image_url: string | null;
   categories: { name: string; slug: string } | null;
 };
 

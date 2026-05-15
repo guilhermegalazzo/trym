@@ -25,7 +25,7 @@ export default async function MarketplacePage() {
   const [venuesRes, categoriesRes] = await Promise.all([
     admin
       .from("venues")
-      .select("id, name, description, city, state, address_line, phone, category_id, categories(name, slug)")
+      .select("id, name, description, city, state, address_line, phone, category_id, cover_image_url, categories(name, slug)")
       .order("name")
       .limit(100),
     admin

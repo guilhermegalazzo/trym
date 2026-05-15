@@ -49,14 +49,24 @@ function VenueCard({ venue }: { venue: PublicVenue }) {
         el.style.transform = "translateY(0)";
       }}
     >
-      {/* Gradient banner */}
-      <div className={cn(
-        "relative h-28 bg-gradient-to-br flex items-center justify-center",
-        cfg.bannerFrom, cfg.bannerTo,
-      )}>
-        <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm ring-2 ring-white/40">
-          <span className="text-2xl font-black text-white">{initial}</span>
-        </div>
+      {/* Banner */}
+      <div className="relative h-28 overflow-hidden">
+        {venue.cover_image_url ? (
+          <img
+            src={venue.cover_image_url}
+            alt={venue.name}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <div className={cn(
+            "h-full w-full bg-gradient-to-br flex items-center justify-center",
+            cfg.bannerFrom, cfg.bannerTo,
+          )}>
+            <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 backdrop-blur-sm ring-2 ring-white/40">
+              <span className="text-2xl font-black text-white">{initial}</span>
+            </div>
+          </div>
+        )}
         <div className="absolute top-3 right-3">
           <span className="flex items-center gap-1 rounded-full bg-white/90 backdrop-blur-sm px-2.5 py-1 text-[10px] font-semibold text-neutral-700">
             <Icon className="h-3 w-3" strokeWidth={1.5} />

@@ -6,7 +6,9 @@ export type CalAppointment = {
   scheduled_at: string;
   duration_minutes: number;
   status: "confirmed" | "in_progress" | "completed" | "cancelled" | "no_show";
+  source: string;
   total_cents: number;
+  internal_notes: string | null;
   venue_customers: { full_name: string } | null;
   team_members: { id: string; display_name: string; avatar_url: string | null } | null;
   appointment_items: Array<{ description: string }>;
@@ -49,7 +51,7 @@ export default async function CalendarioPage() {
     supabase
       .from("appointments")
       .select(`
-        id, scheduled_at, duration_minutes, status, total_cents,
+        id, scheduled_at, duration_minutes, status, source, total_cents, internal_notes,
         venue_customers ( full_name ),
         team_members ( id, display_name, avatar_url ),
         appointment_items ( description )

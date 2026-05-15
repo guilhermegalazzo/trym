@@ -303,12 +303,14 @@ function AptBlock({ apt, overlap = 1, overlapIdx = 0, onSelect }: {
   overlapIdx?: number;
   onSelect: (apt: CalAppointment) => void;
 }) {
+  const isBlock   = apt.source === "block";
   const startMin  = minutesFromMidnight(apt.scheduled_at);
   const top       = topOffset(startMin);
   const height    = Math.max(apt.duration_minutes * PIXELS_PER_MINUTE, 24);
   const customerName = apt.venue_customers?.full_name ?? "";
-  const colors =
-    apt.status === "confirmed"
+  const colors = isBlock
+    ? { bg: "bg-neutral-100", border: "border-neutral-400", text: "text-neutral-500" }
+    : apt.status === "confirmed"
       ? (isFemale(customerName) ? FEMALE_COLORS : STATUS_COLORS.confirmed)
       : (STATUS_COLORS[apt.status] ?? STATUS_COLORS.confirmed);
   const service   = apt.appointment_items[0]?.description ?? "";
@@ -320,25 +322,31 @@ function AptBlock({ apt, overlap = 1, overlapIdx = 0, onSelect }: {
     <div
       role="button"
       tabIndex={0}
-      onClick={() => onSelect(apt)}
-      onKeyDown={(e) => e.key === "Enter" && onSelect(apt)}
+      onClick={() => !isBlock && onSelect(apt)}
+      onKeyDown={(e) => e.key === "Enter" && !isBlock && onSelect(apt)}
       className={cn(
-        "absolute rounded-lg border-l-2 px-2 py-1 overflow-hidden cursor-pointer transition-all hover:z-10 hover:scale-[1.01] hover:shadow-md",
+        "absolute rounded-lg border-l-2 px-2 py-1 overflow-hidden transition-all hover:z-10",
         colors.bg, colors.border, colors.text,
+        isBlock ? "cursor-default opacity-70" : "cursor-pointer hover:scale-[1.01] hover:shadow-md",
       )}
       style={{
         top,
         height,
         left: `calc(${leftPct}% + 2px)`,
         width: `calc(${widthPct}% - 4px)`,
+        backgroundImage: isBlock
+          ? "repeating-linear-gradient(45deg, transparent, transparent 4px, rgba(0,0,0,0.04) 4px, rgba(0,0,0,0.04) 8px)"
+          : undefined,
       }}
-      title={`${apt.venue_customers?.full_name ?? "Cliente"} — ${formatTime(apt.scheduled_at)}`}
+      title={isBlock ? `Bloqueado${apt.internal_notes ? `: ${apt.internal_notes}` : ""}` : `${customerName} — ${formatTime(apt.scheduled_at)}`}
     >
       <p className="text-[11px] font-semibold leading-tight truncate">
-        {apt.venue_customers?.full_name ?? "Cliente"}
+        {isBlock ? "🚫 Bloqueado" : (customerName || "Cliente")}
       </p>
-      {height > 32 && service && (
-        <p className="text-[10px] opacity-70 leading-tight truncate">{service}</p>
+      {height > 32 && (
+        <p className="text-[10px] opacity-70 leading-tight truncate">
+          {isBlock ? (apt.internal_notes ?? "") : service}
+        </p>
       )}
       {height > 48 && (
         <p className="text-[10px] opacity-60 font-mono">{formatTime(apt.scheduled_at)}</p>
