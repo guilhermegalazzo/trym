@@ -61,6 +61,41 @@ async function createAppointment(
   customerId: string,
   payload: BookingPayload,
 ): Promise<{ error: string | null; appointmentId: string | null }> {
+  // Guard against double-booking: check for overlapping appointments
+  const newStart = new Date(payload.scheduledAt).getTime();
+  const newEnd   = newStart + payload.durationMinutes * 60_000;
+
+  // Fetch appointments that start up to 8h before our slot (covers long-duration overlaps)
+  const lookback = new Date(newStart - 8 * 60 * 60_000).toISOString();
+  const newEndISO = new Date(newEnd).toISOString();
+
+  let conflictQuery = supabase
+    .from("appointments")
+    .select("scheduled_at, duration_minutes")
+    .eq("venue_id", payload.venueId)
+    .in("status", ["confirmed", "in_progress"])
+    .gte("scheduled_at", lookback)
+    .lt("scheduled_at", newEndISO);
+
+  if (payload.teamMemberId) {
+    conflictQuery = conflictQuery.eq("team_member_id", payload.teamMemberId);
+  }
+
+  const { data: existing } = await conflictQuery;
+
+  const hasConflict = (existing ?? []).some((apt: { scheduled_at: string; duration_minutes: number }) => {
+    const aptStart = new Date(apt.scheduled_at).getTime();
+    const aptEnd   = aptStart + (apt.duration_minutes ?? 60) * 60_000;
+    return aptStart < newEnd && aptEnd > newStart;
+  });
+
+  if (hasConflict) {
+    return {
+      error: "Este horário não está mais disponível. Escolha outro horário e tente novamente.",
+      appointmentId: null,
+    };
+  }
+
   const { data: apt, error: aptErr } = await supabase
     .from("appointments")
     .insert({

@@ -429,7 +429,7 @@ function DateTimeStep({
                     className={cn(
                       "rounded-lg border py-2 text-sm font-medium transition-all",
                       isSlotSelected ? "border-brand-600 bg-brand-600 text-white"
-                        : busy ? "border-border-subtle bg-surface-1 text-text-tertiary cursor-not-allowed line-through opacity-50"
+                        : busy ? "border-red-200 bg-red-50 text-red-400 cursor-not-allowed line-through"
                         : "border-border-default bg-white text-text-primary hover:border-brand-400 hover:bg-brand-50",
                     )}
                   >
